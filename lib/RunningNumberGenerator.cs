@@ -8,14 +8,15 @@ namespace DatagenSharp
 
 		private int currentValue = 0;
 
-		public void Init(object parameter, int seed)
+		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
-
+			// TODO: add parameter support
+			return (success: true, possibleError: "");
 		}
 
-		public object Generate(object parameter = null, Type wantedOutput = null)
+		public (bool success, string possibleError, object result) Generate(object parameter = null, Type wantedOutput = null)
 		{
-			return this.currentValue;
+			return (success: true, possibleError: "", result: this.currentValue);
 		}
 
 		public Type[] GetSupportedOutputs()
