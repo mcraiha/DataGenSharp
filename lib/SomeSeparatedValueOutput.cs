@@ -45,7 +45,7 @@ namespace DatagenSharp
 			// Check if parameter type is supported
 			if (parameter != null && !supportedParameterTypes.Contains(parameter.GetType()))
 			{
-				string error = ErrorMessages.UnsupportedParameterType(LongName, parameter.GetType());
+				string error = ErrorMessages.UnsupportedParameterType(LongName, "Init", parameter.GetType());
 				return (success: false, possibleError: error);
 			}
 
