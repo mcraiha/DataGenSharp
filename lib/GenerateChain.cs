@@ -22,7 +22,7 @@ namespace DatagenSharp
 			for (int i = 0; i < this.OrderDefinition.Count; i++)
 			{
 				var item = this.OrderDefinition[i];
-				object tempValue = item.generator.Generate(item.parameter, item.wantedOutput);
+				(bool generateSuccess, string possibleError, object tempValue) = item.generator.Generate(item.parameter, item.wantedOutput);
 				
 				if (item.mutatorChain != null)
 				{
