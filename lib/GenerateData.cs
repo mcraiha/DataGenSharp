@@ -10,14 +10,21 @@ namespace DatagenSharp
 
 		public static IDataOutputter output;
 
-		public static object outputParameters;
+		public static object outputParameters = null;
 
 		public static uint howManyStepToRun = 10;
 
-		public static void Generate(Stream outputStream)
+		public static (bool success, string possibleError) Generate(Stream outputStream)
 		{
 			// Init output
-			output.Init(outputParameters, outputStream);
+			(bool initSuccess, string possibleInitError) = output.Init(outputParameters, outputStream);
+
+			// Verify that init went OK
+			if (!initSuccess)
+			{
+				return (success: initSuccess, possibleError: possibleInitError);
+			}
+
 
 			// Write header
 			var names = chain.GetNames();
@@ -29,12 +36,18 @@ namespace DatagenSharp
 			for (int i = 0; i < howManyStepToRun; i++)
 			{
 				entries = GetCurrentLine();
-				output.WriteSingleEntry(entries);
+				(bool entryWriteSuccess, string possibleEntryWriteError) = output.WriteSingleEntry(entries);
+
+				if (!entryWriteSuccess)
+				{
+					return (success: entryWriteSuccess, possibleError: possibleEntryWriteError);
+				}
+
 				chain.UpdateToNextStep();
 			}
 
 			// Write footer
-			output.WriteFooter(entries);
+			return output.WriteFooter(entries);
 		}
 
 		private static List<object> GetCurrentLine()

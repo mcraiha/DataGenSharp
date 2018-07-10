@@ -36,16 +36,28 @@ namespace DatagenSharp
 
 		private bool headerIsWanted = true;
 
+		private bool lastLineShouldHaveNewLine = true;
+
+		private bool writeBom = false;
+
 		public (bool success, string possibleError) Init(object parameter, Stream outputStream)
 		{
 			// Check if parameter type is supported
-			if (!supportedParameterTypes.Contains(parameter.GetType()))
+			if (parameter != null && !supportedParameterTypes.Contains(parameter.GetType()))
 			{
 				string error = ErrorMessages.UnsupportedParameterType(LongName, parameter.GetType());
 				return (success: false, possibleError: error);
 			}
 
-			this.output = new StreamWriter(outputStream, Encoding.UTF8);
+			if (writeBom)
+			{
+				this.output = new StreamWriter(outputStream, Encoding.UTF8);
+			}
+			else
+			{
+				this.output = new StreamWriter(outputStream, new UTF8Encoding(false));
+			}
+
 			this.preset = predefinedPresets[0];
 
 			return (success: true, possibleError: "");
