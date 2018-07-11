@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DatagenSharp
@@ -9,7 +10,8 @@ namespace DatagenSharp
 
 		public static Dictionary<string, string> GetParameterDictionary(string parameter)
 		{
-			Dictionary<string, string> returnDictionary = new Dictionary<string, string>();
+			// By default we ignore case for key, so "someValue" and "SOMEVALUE" are equal
+			Dictionary<string, string> returnDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
 			if (string.IsNullOrEmpty(parameter))
 			{
@@ -32,6 +34,24 @@ namespace DatagenSharp
 			}
 
 			return returnDictionary;
+		}
+
+		public static bool ContainsKey(Dictionary<string, string> dict, List<string> parameterList)
+		{
+			if (dict == null || dict.Count < 1)
+			{
+				return false;
+			}
+
+			foreach (string parameter in parameterList)
+			{
+				if (dict.ContainsKey(parameter))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 }
