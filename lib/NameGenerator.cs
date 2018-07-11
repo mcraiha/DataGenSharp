@@ -13,10 +13,10 @@ namespace DatagenSharp
 
 		private static readonly Type[] supportedTypes = new Type[] { typeof(string) };
 
-		private static readonly List<(string language, List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames)> languagesAndNames = new List<(string language, List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames)>()
+		private static readonly List<(GenerateLanguage language, List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames)> languagesAndNames = new List<(GenerateLanguage language, List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames)>()
 		{
-			("Finnish",     FinnishMaleFirstNames,      FinnishFemaleFirstNames,    FinnishLastNames),
-			("EnglishUS",   EnglishUSMaleFirstNames,    EnglishUSFemaleFirstNames,  EnglishUSLastNames),
+			(GenerateLanguage.EnglishUS,   EnglishUSMaleFirstNames,    EnglishUSFemaleFirstNames,  EnglishUSLastNames),
+			(GenerateLanguage.Finnish,     FinnishMaleFirstNames,      FinnishFemaleFirstNames,    FinnishLastNames),		
 		};
 
 		private enum GenerateLanguage
@@ -98,7 +98,7 @@ namespace DatagenSharp
 				this.GenerateWeightedNumbers();
 			}
 
-			var chosenLanguageSettings = languagesAndNames.Find(element => element.language == "Finnish");
+			var chosenLanguageSettings = languagesAndNames.Find(element => element.language == this.generateLanguage);
 			this.chosenFirstNames = NameMixer.CombineNames(chosenLanguageSettings.firstNamesMale, chosenLanguageSettings.firstNamesFemale);
 			this.chosenLastNames = chosenLanguageSettings.lastNames;			
 
