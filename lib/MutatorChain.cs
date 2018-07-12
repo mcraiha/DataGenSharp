@@ -5,9 +5,9 @@ namespace DatagenSharp
 {
 	public class MutatorChain
 	{
-		public List<(IMutator mutator, string parameters, Type wantedOutput)> chain = new List<(IMutator mutator, string parameters, Type wantedOutput)>();
+		private List<(IMutator mutator, object parameters, Type wantedOutput)> chain = new List<(IMutator mutator, object parameters, Type wantedOutput)>();
 
-		public (bool success, string possibleError) AddMutatorToChain(IMutator mutator, string parameters, Type wantedOutput)
+		public (bool success, string possibleError) AddMutatorToChain(IMutator mutator, object parameters, Type wantedOutput)
 		{
 			// TODO: check if chain is compatible
 			chain.Add((mutator, parameters, wantedOutput));
@@ -26,7 +26,14 @@ namespace DatagenSharp
 
 			foreach (var mutatorEntry in chain)
 			{
-				tempObject = mutatorEntry.mutator.Mutate(tempObject, mutatorEntry.parameters, mutatorEntry.wantedOutput);
+				(bool mutateSuccess, string possibleMutateError, object mutateResult) = mutatorEntry.mutator.Mutate(tempObject, mutatorEntry.parameters, mutatorEntry.wantedOutput);
+
+				if (!mutateSuccess)
+				{
+					return (success: false, possibleError: possibleMutateError, result: null);
+				}
+
+				tempObject = mutateResult;
 			}
 
 			return (success: true, possibleError: "", result: tempObject);

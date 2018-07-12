@@ -4,9 +4,9 @@ namespace DatagenSharp
 {
 	public interface IMutator
 	{
-		void Init(string parameter, int seed);
+		(bool success, string possibleError) Init(object parameter, int seed);
 
-		object Mutate(object input, string parameter = null, Type wantedOutputType = null);
+		(bool success, string possibleError, object result) Mutate(object input, object parameter = null, Type wantedOutputType = null);
 
 		Type[] GetSupportedOutputs();
 	}
