@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>LibDataGenSharp</PackageId>
+    <Version>0.9.0</Version>
+    <VersionSuffix>$(VersionSuffix)</VersionSuffix>
+    <Authors>Kaarlo Räihä</Authors>
+    <Description>C# library for generating data, e.g. JSON and CSV/TSV files</Description>
+    <IncludeSource>true</IncludeSource>
+    <PackageProjectUrl>https://github.com/mcraiha/DataGenSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mcraiha/DataGenSharp.git</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
