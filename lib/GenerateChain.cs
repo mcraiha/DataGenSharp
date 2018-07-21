@@ -45,9 +45,18 @@ namespace DatagenSharp
 			}
 		}
 
+		#region Serialization
+
+		public void Load(string parameter)
+		{
+
+		}
+
 		public string Save()
 		{
 			return "";
 		}
+
+		#endregion // Serialization
 	}
 }
