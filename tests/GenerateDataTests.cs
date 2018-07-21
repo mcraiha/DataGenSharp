@@ -33,18 +33,20 @@ namespace Tests
 				"9",
 				"" // Newline
 			});
-			RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
-			GenerateData.chain.DataGenerators.Add(runningNumberGenerator);
 
-			GenerateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
+			GenerateData generateData = new GenerateData();
+			RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
+			generateData.chain.DataGenerators.Add(runningNumberGenerator);
+
+			generateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
 
 			SomeSeparatedValueOutput outCSV = new SomeSeparatedValueOutput();
-			GenerateData.output = outCSV;
+			generateData.output = outCSV;
 
 			MemoryStream ms = new MemoryStream();
 
 			// Act
-			GenerateData.Generate(ms);
+			generateData.Generate(ms);
 			string result = Encoding.UTF8.GetString(ms.ToArray());
 
 			// Assert
@@ -70,24 +72,25 @@ namespace Tests
 				"" // Newline
 			});
 
+			GenerateData generateData = new GenerateData();
 			RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
-			GenerateData.chain.DataGenerators.Add(runningNumberGenerator);
+			generateData.chain.DataGenerators.Add(runningNumberGenerator);
 
 			NameGenerator nameGenerator = new NameGenerator();
 			nameGenerator.Init(null, seed: 1337);
-			GenerateData.chain.DataGenerators.Add(nameGenerator);
+			generateData.chain.DataGenerators.Add(nameGenerator);
 
-			GenerateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
-			GenerateData.chain.OrderDefinition.Add(("Firstname", nameGenerator, typeof(string), null, "firstname"));
-			GenerateData.chain.OrderDefinition.Add(("Lastname", nameGenerator, typeof(string), null, "lastname"));
+			generateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
+			generateData.chain.OrderDefinition.Add(("Firstname", nameGenerator, typeof(string), null, "firstname"));
+			generateData.chain.OrderDefinition.Add(("Lastname", nameGenerator, typeof(string), null, "lastname"));
 
 			SomeSeparatedValueOutput outCSV = new SomeSeparatedValueOutput();
-			GenerateData.output = outCSV;
+			generateData.output = outCSV;
 
 			MemoryStream ms = new MemoryStream();
 
 			// Act
-			GenerateData.Generate(ms);
+			generateData.Generate(ms);
 			string result = Encoding.UTF8.GetString(ms.ToArray());
 
 			// Assert

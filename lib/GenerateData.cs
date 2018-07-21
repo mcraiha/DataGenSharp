@@ -4,20 +4,20 @@ using System.Linq;
 
 namespace DatagenSharp
 {
-	public static class GenerateData
+	public class GenerateData
 	{
-		public static GenerateChain chain = new GenerateChain();
+		public GenerateChain chain = new GenerateChain();
 
-		public static IDataOutputter output;
+		public IDataOutputter output;
 
-		public static object outputParameters = null;
+		public object outputParameters = null;
 
-		public static uint howManyStepToRun = 10;
+		public uint howManyStepToRun = 10;
 
-		public static (bool success, string possibleError) Generate(Stream outputStream)
+		public (bool success, string possibleError) Generate(Stream outputStream)
 		{
 			// Init output
-			(bool initSuccess, string possibleInitError) = output.Init(outputParameters, outputStream);
+			(bool initSuccess, string possibleInitError) = this.output.Init(outputParameters, outputStream);
 
 			// Verify that init went OK
 			if (!initSuccess)
@@ -27,8 +27,8 @@ namespace DatagenSharp
 
 
 			// Write header
-			var names = chain.GetNames();
-			output.WriteHeader(names.ConvertAll(s => (object)s));
+			var names = this.chain.GetNames();
+			this.output.WriteHeader(names.ConvertAll(s => (object)s));
 
 			List<object> entries = null;
 
@@ -36,23 +36,23 @@ namespace DatagenSharp
 			for (int i = 0; i < howManyStepToRun; i++)
 			{
 				entries = GetCurrentLine();
-				(bool entryWriteSuccess, string possibleEntryWriteError) = output.WriteSingleEntry(entries);
+				(bool entryWriteSuccess, string possibleEntryWriteError) = this.output.WriteSingleEntry(entries);
 
 				if (!entryWriteSuccess)
 				{
 					return (success: entryWriteSuccess, possibleError: possibleEntryWriteError);
 				}
 
-				chain.UpdateToNextStep();
+				this.chain.UpdateToNextStep();
 			}
 
 			// Write footer
 			return output.WriteFooter(entries);
 		}
 
-		private static List<object> GetCurrentLine()
+		private List<object> GetCurrentLine()
 		{
-			return chain.RunOneStep();
+			return this.chain.RunOneStep();
 		}
 
 		public static void Load(string parameter)
