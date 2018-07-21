@@ -36,9 +36,9 @@ namespace Tests
 
 			GenerateData generateData = new GenerateData();
 			RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
-			generateData.chain.DataGenerators.Add(runningNumberGenerator);
+			generateData.AddGeneratorToChain(runningNumberGenerator);
 
-			generateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
+			generateData.AddWantedElement(("Id", runningNumberGenerator, typeof(int), null, null));
 
 			SomeSeparatedValueOutput outCSV = new SomeSeparatedValueOutput();
 			generateData.output = outCSV;
@@ -78,11 +78,11 @@ namespace Tests
 
 			NameGenerator nameGenerator = new NameGenerator();
 			nameGenerator.Init(null, seed: 1337);
-			generateData.chain.DataGenerators.Add(nameGenerator);
+			generateData.AddGeneratorToChain(nameGenerator);
 
-			generateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
-			generateData.chain.OrderDefinition.Add(("Firstname", nameGenerator, typeof(string), null, "firstname"));
-			generateData.chain.OrderDefinition.Add(("Lastname", nameGenerator, typeof(string), null, "lastname"));
+			generateData.AddWantedElement(("Id", runningNumberGenerator, typeof(int), null, null));
+			generateData.AddWantedElement(("Firstname", nameGenerator, typeof(string), null, "firstname"));
+			generateData.AddWantedElement(("Lastname", nameGenerator, typeof(string), null, "lastname"));
 
 			SomeSeparatedValueOutput outCSV = new SomeSeparatedValueOutput();
 			generateData.output = outCSV;

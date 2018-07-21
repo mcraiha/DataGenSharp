@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,14 +56,43 @@ namespace DatagenSharp
 			return this.chain.RunOneStep();
 		}
 
-		public static void Load(string parameter)
+
+		#region Helpers
+
+		public void AddGeneratorToChain(IDataGenerator generator)
+		{
+			this.chain.DataGenerators.Add(generator);
+		}
+
+		public void AddGeneratorsToChain(params IDataGenerator[] generators)
+		{
+			this.chain.DataGenerators.AddRange(generators);
+		}
+
+		public void AddWantedElement((string name, IDataGenerator generator, Type wantedOutput, MutatorChain mutatorChain, object parameter) wantedElement)
+		{
+			this.chain.WantedElements.Add(wantedElement);
+		}
+
+		public void AddWantedElement(string name, IDataGenerator generator, Type wantedOutput, MutatorChain mutatorChain, object parameter)
+		{
+			this.AddWantedElement((name, generator, wantedOutput, mutatorChain, parameter));
+		}
+
+		#endregion // Helpers
+
+
+		#region Serialization
+		public void Load(string parameter)
 		{
 
 		}
 
-		public static string Save()
+		public string Save()
 		{
 			return "";
 		}
+
+		#endregion // Serialization
 	}
 }

@@ -8,20 +8,20 @@ namespace DatagenSharp
 	{
 		public List<IDataGenerator> DataGenerators = new List<IDataGenerator>();
 
-		public List<(string name, IDataGenerator generator, Type wantedOutput, MutatorChain mutatorChain, object parameter)> OrderDefinition = new List<(string, IDataGenerator, Type, MutatorChain, object)>();
+		public List<(string name, IDataGenerator generator, Type wantedOutput, MutatorChain mutatorChain, object parameter)> WantedElements = new List<(string, IDataGenerator, Type, MutatorChain, object)>();
 
 		public List<string> GetNames()
 		{
-			return this.OrderDefinition.Select(element => element.name).ToList();
+			return this.WantedElements.Select(element => element.name).ToList();
 		}
 
 		public List<object> RunOneStep()
 		{
-			List<object> returnList = new List<object>(this.OrderDefinition.Count);
+			List<object> returnList = new List<object>(this.WantedElements.Count);
 
-			for (int i = 0; i < this.OrderDefinition.Count; i++)
+			for (int i = 0; i < this.WantedElements.Count; i++)
 			{
-				var item = this.OrderDefinition[i];
+				var item = this.WantedElements[i];
 				(bool generateSuccess, string possibleError, object tempValue) = item.generator.Generate(item.parameter, item.wantedOutput);
 				
 				if (item.mutatorChain != null)
