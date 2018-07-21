@@ -9,24 +9,25 @@ Because there are situations where I have to generate data for testing, so it is
 2. Use code like
 ```csharp
 // Arrange
+GenerateData generateData = new GenerateData();
 RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
-GenerateData.chain.DataGenerators.Add(runningNumberGenerator);
+generateData.chain.DataGenerators.Add(runningNumberGenerator);
 
 NameGenerator nameGenerator = new NameGenerator();
 nameGenerator.Init(null, seed: 1337);
-GenerateData.chain.DataGenerators.Add(nameGenerator);
+generateData.AddGeneratorToChain(nameGenerator);
 
-GenerateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
-GenerateData.chain.OrderDefinition.Add(("Firstname", nameGenerator, typeof(string), null, "firstname"));
-GenerateData.chain.OrderDefinition.Add(("Lastname", nameGenerator, typeof(string), null, "lastname"));
+generateData.AddWantedElement(("Id", runningNumberGenerator, typeof(int), null, null));
+generateData.AddWantedElement(("Firstname", nameGenerator, typeof(string), null, "firstname"));
+generateData.AddWantedElement(("Lastname", nameGenerator, typeof(string), null, "lastname"));
 
 SomeSeparatedValueOutput outCSV = new SomeSeparatedValueOutput();
-GenerateData.output = outCSV;
+generateData.output = outCSV;
 
 MemoryStream ms = new MemoryStream();
 
 // Act
-GenerateData.Generate(ms);
+generateData.Generate(ms);
 string result = Encoding.UTF8.GetString(ms.ToArray());
 ```
 
@@ -50,10 +51,11 @@ all features are under **DatagenSharp** namespace
 ## How should my brain handle this
 
 ### In nutshell
-1. Add all generators to **GenerateData**
-2. Add all chains to **GenerateData** and use generators given in step 1.
-3. Add output for **GenerateData**
-4. Generate
+1. Create instance of **GenerateData**
+2. Add all generators 
+3. Add all wanted elements to (use generators given in step 2.)
+4. Add output 
+5. Generate
 
 ### Additional tips
 - One generator can be used by multiple chains
@@ -71,9 +73,14 @@ dotnet build
 ```
 
 ### Build nuget
-TBA
+Use [create-nuget-debug.ps1](create-nuget-debug.ps1) go generate the command, it will be something like
+```bash
+dotnet pack --configuration Debug /p:InformationalVersion="07/21/2018 09:10:01 8866971970797f9d9300438f31bd8712b0defae4" --version-suffix 8866971
+```
+(this will be improved in future!)
 
 ## Testing
+Move to [tests](tests) folder if you aren't there yet
 ### Requirements 
 * nunit
 * NUnit3TestAdapter
@@ -94,14 +101,20 @@ dotnet test
 * Running number generator
 * Name generator (supports English-US and Finnish names)
 * Basic CSV/TSV output
+* Basic JSON output
 * Few test cases
+* Random null mutator
+
+## What is work in progress
+* Nuget
+* More generators
+* More mutators
+* More test cases
+
 
 ## What is missing
-* More generators
-* Mutators
+
 * CI
-* Nuget
-* More test cases
 * Benchmarks
 * Better help messages
 
