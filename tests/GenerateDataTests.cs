@@ -96,5 +96,31 @@ namespace Tests
 			// Assert
 			Assert.AreEqual(expectedOutput, result);
 		}
+
+		[Test]
+		public void JsonOutputTest()
+		{
+			// Arrange
+			RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
+			GenerateData.chain.DataGenerators.Add(runningNumberGenerator);
+
+			NameGenerator nameGenerator = new NameGenerator();
+			nameGenerator.Init(null, seed: 1337);
+			GenerateData.chain.DataGenerators.Add(nameGenerator);
+
+			GenerateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
+			GenerateData.chain.OrderDefinition.Add(("Firstname", nameGenerator, typeof(string), null, "firstname"));
+			GenerateData.chain.OrderDefinition.Add(("Lastname", nameGenerator, typeof(string), null, "lastname"));
+
+			JsonOutput outJson = new JsonOutput();
+			GenerateData.output = outJson;
+
+			MemoryStream ms = new MemoryStream();
+
+			// Act
+			GenerateData.Generate(ms);
+			string result = Encoding.UTF8.GetString(ms.ToArray());
+			int k = 3;
+		}
 	}
 }
