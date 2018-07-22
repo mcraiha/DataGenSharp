@@ -4,6 +4,8 @@ using System;
 using System.IO;
 using System.Text;
 using System.Diagnostics;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Tests
 {
@@ -74,7 +76,7 @@ namespace Tests
 
 			GenerateData generateData = new GenerateData();
 			RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
-			generateData.chain.DataGenerators.Add(runningNumberGenerator);
+			generateData.AddGeneratorToChain(runningNumberGenerator);
 
 			NameGenerator nameGenerator = new NameGenerator();
 			nameGenerator.Init(null, seed: 1337);
@@ -101,26 +103,40 @@ namespace Tests
 		public void JsonOutputTest()
 		{
 			// Arrange
+			GenerateData generateData = new GenerateData();
 			RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
-			GenerateData.chain.DataGenerators.Add(runningNumberGenerator);
+			generateData.AddGeneratorToChain(runningNumberGenerator);
 
 			NameGenerator nameGenerator = new NameGenerator();
 			nameGenerator.Init(null, seed: 1337);
-			GenerateData.chain.DataGenerators.Add(nameGenerator);
+			generateData.AddGeneratorToChain(nameGenerator);
 
-			GenerateData.chain.OrderDefinition.Add(("Id", runningNumberGenerator, typeof(int), null, null));
-			GenerateData.chain.OrderDefinition.Add(("Firstname", nameGenerator, typeof(string), null, "firstname"));
-			GenerateData.chain.OrderDefinition.Add(("Lastname", nameGenerator, typeof(string), null, "lastname"));
+			generateData.AddWantedElement(("Id", runningNumberGenerator, typeof(int), null, null));
+			generateData.AddWantedElement(("Firstname", nameGenerator, typeof(string), null, "firstname"));
+			generateData.AddWantedElement(("Lastname", nameGenerator, typeof(string), null, "lastname"));
 
 			JsonOutput outJson = new JsonOutput();
-			GenerateData.output = outJson;
+			generateData.output = outJson;
 
 			MemoryStream ms = new MemoryStream();
 
 			// Act
-			GenerateData.Generate(ms);
+			generateData.Generate(ms);
 			string result = Encoding.UTF8.GetString(ms.ToArray());
-			int k = 3;
+			List<IdFirstnameLastname> idFirstnameLastnameList = JsonConvert.DeserializeObject<List<IdFirstnameLastname>>(result);
+			
+			// Assert
+			Assert.AreEqual(generateData.howManyStepToRun, idFirstnameLastnameList.Count, "There should be certain amount of wanted items");
+			Assert.AreEqual("Jacob", idFirstnameLastnameList[0].Firstname);
+			Assert.AreEqual("Smith", idFirstnameLastnameList[0].Lastname);
+			Assert.AreEqual(0, idFirstnameLastnameList[0].Id);
 		}
+	}
+
+	public class IdFirstnameLastname
+	{
+		public int Id;
+		public string Firstname;
+		public string Lastname;
 	}
 }
