@@ -104,6 +104,7 @@ dotnet test
 * Basic JSON output
 * Few test cases
 * Random null mutator
+* Email mutator
 
 ## What is work in progress
 * Nuget
