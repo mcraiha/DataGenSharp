@@ -79,6 +79,7 @@ namespace Tests
 			
 			CollectionAssert.DoesNotContain(successList, false, "All generates should have been successful");
 			Assert.GreaterOrEqual(bools.Where(item => item == true).Count(), 25, "There should be at least some true values");
+			Assert.GreaterOrEqual(bools.Where(item => item == false).Count(), 25, "There should be at least some false values");
 		}
 	}
 }
