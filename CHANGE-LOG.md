@@ -4,6 +4,7 @@
 - Add JSON output
 - Add Random null mutator
 - Add Email mutator
+- Add Boolean generator
  
 ## Version 0.9.0
 - Initial Nuget release
