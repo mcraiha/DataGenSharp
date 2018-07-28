@@ -81,5 +81,39 @@ namespace Tests
 			Assert.GreaterOrEqual(bools.Where(item => item == true).Count(), 25, "There should be at least some true values");
 			Assert.GreaterOrEqual(bools.Where(item => item == false).Count(), 25, "There should be at least some false values");
 		}
+
+		[Test]
+		public void AlterGenerateTest()
+		{
+			// Arrange
+			object parameter = "alter";
+
+			int seed = 1337;
+
+			int loopCount = 20;
+
+			BooleanGenerator bg = new BooleanGenerator();
+
+			List<bool> bools = new List<bool>();
+			List<bool> successList = new List<bool>();
+
+			// Act
+			var shouldBeValidResult = bg.Init(parameter, seed);
+
+			for (int i = 0; i < loopCount; i++)
+			{
+				var generateResult = bg.Generate(parameter: null, wantedOutput: null);
+				successList.Add(generateResult.success);
+				bools.Add((bool)generateResult.result);
+				bg.NextStep();
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidResult.success, "Init should have been successful");
+			CollectionAssert.DoesNotContain(successList, false, "All generates should have been successful");
+
+			Assert.AreEqual(loopCount / 2, bools.Where(item => item == true).Count(), "Half of the results should be true");
+			Assert.AreEqual(loopCount / 2, bools.Where(item => item == false).Count(), "Half of the results should be false");
+		}
 	}
 }
