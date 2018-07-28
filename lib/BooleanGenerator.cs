@@ -82,6 +82,10 @@ namespace DatagenSharp
 			{
 				returnValue = this.currentValue.ToString();
 			}
+			else
+			{
+				return (success: false, possibleError: ErrorMessages.UnsupportedWantedOutputType(LongName, wantedOutput), result: null);
+			}
 
 			return (success: true, possibleError: "", result: returnValue);
 		}
