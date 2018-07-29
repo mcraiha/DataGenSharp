@@ -5,6 +5,7 @@ namespace DatagenSharp
 {
 	public static class ParameterParser
 	{
+		#region String
 		private static readonly char entrySeparator = '|';
 		private static readonly char valueSeparator = '=';
 
@@ -53,5 +54,29 @@ namespace DatagenSharp
 
 			return false;
 		}
+
+		#endregion // String
+
+
+		#region Objects
+
+		/// <summary>
+		/// Check if object is an array, and in that case get type of elements it contains
+		/// </summary>
+		/// <param name="isArray">Is Array</param>
+		/// <param name="elementType">Element Type</param>
+		/// <returns>Valuetuple which contains the information</returns>
+		public static (bool isArray, Type elementType) PrecheckPossibleArray(object input)
+		{
+			Type valueType = input.GetType();
+			if (!valueType.IsArray)
+			{
+				return (isArray: false, elementType: null);
+			}
+
+			return (isArray: true, elementType: valueType.GetElementType());
+		}
+
+		#endregion // Objects
 	}
 }
