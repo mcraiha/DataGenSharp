@@ -59,7 +59,7 @@ namespace DatagenSharp
 			}
 
 			// Check that wanted output type is supported
-			if (wantedOutputType != null && Array.IndexOf(supportedOutputTypes, input.GetType()) == -1)
+			if (wantedOutputType != null && Array.IndexOf(supportedOutputTypes, wantedOutputType) == -1)
 			{
 				return (success: false, possibleError: ErrorMessages.UnsupportedWantedOutputType(LongName, wantedOutputType), result: null);
 			}
