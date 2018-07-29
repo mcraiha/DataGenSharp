@@ -4,6 +4,11 @@ namespace DatagenSharp
 {
 	public static class ErrorMessages
 	{
+		public static string UnsupportedNullParameter(string callerName, string where)
+		{
+			return $"{callerName} does not support null parameter!";
+		}
+
 		public static string UnsupportedParameterType(string callerName, string where, Type unsupportedType)
 		{
 			return $"{callerName} does not support {unsupportedType} as {where} parameter type!";
@@ -22,6 +27,11 @@ namespace DatagenSharp
 		public static string UnsupportedInputType(string callerName, Type unsupportedInputType)
 		{
 			return $"{callerName} does not support {unsupportedInputType} as input type!";
+		}
+
+		public static string ParameterArrayNotEnoughElements(string callerName, string where, int wanted, int has)
+		{
+			return $"{callerName} requires parameter array in {where} to have {wanted} elements, but current parameter has {has} objects!";
 		}
 	}
 }
