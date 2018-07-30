@@ -5,6 +5,8 @@
 - Add Random null mutator
 - Add Email mutator
 - Add Boolean generator
+- Add Boolean mutator
+- Add Guid generator
  
 ## Version 0.9.0
 - Initial Nuget release

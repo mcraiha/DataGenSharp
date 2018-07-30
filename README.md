@@ -105,6 +105,9 @@ dotnet test
 * Few test cases
 * Random null mutator
 * Email mutator
+* Boolean generator
+* Boolean mutator
+* Guid generator
 
 ## What is work in progress
 * Nuget
