@@ -27,7 +27,7 @@ namespace Tests
 
 			// Assert
 			Assert.IsTrue(shouldBeValidResult1.success, "Init should have been successful");
-			Assert.IsTrue(string.IsNullOrEmpty(shouldBeValidResult1.possibleError));
+			Assert.IsTrue(string.IsNullOrEmpty(shouldBeValidResult1.possibleError), "Init should NOT have an error");
 		}
 
 		[Test]
