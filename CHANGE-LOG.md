@@ -7,6 +7,7 @@
 - Add Boolean generator
 - Add Boolean mutator
 - Add Guid generator
+- Add Integer generator
  
 ## Version 0.9.0
 - Initial Nuget release
