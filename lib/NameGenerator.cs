@@ -80,6 +80,11 @@ namespace DatagenSharp
 				return (success: false, possibleError: error);
 			}
 
+			// Select language
+			var chosenLanguageSettings = languagesAndNames.Find(element => element.language == this.generateLanguage);
+			this.chosenFirstNames = NameMixer.CombineNames(chosenLanguageSettings.firstNamesMale, chosenLanguageSettings.firstNamesFemale);
+			this.chosenLastNames = chosenLanguageSettings.lastNames;
+
 			// Set values based on chosen GenerateMode
 			if (this.currentMode == GenerateMode.Continuos)
 			{
@@ -97,10 +102,6 @@ namespace DatagenSharp
 				this.rng = new Random(seed);
 				this.GenerateWeightedNumbers();
 			}
-
-			var chosenLanguageSettings = languagesAndNames.Find(element => element.language == this.generateLanguage);
-			this.chosenFirstNames = NameMixer.CombineNames(chosenLanguageSettings.firstNamesMale, chosenLanguageSettings.firstNamesFemale);
-			this.chosenLastNames = chosenLanguageSettings.lastNames;			
 
 			return (success: true, possibleError: "");
 		}
