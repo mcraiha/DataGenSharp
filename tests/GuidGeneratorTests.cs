@@ -94,5 +94,39 @@ namespace Tests
 			Assert.IsTrue(shouldBeValidResult.success, "Init should have been successful");
 			Assert.AreEqual(parseWasOk.Count, parseWasOk.Where(item => item == true).Count(), "All of the results should be true");
 		}
+
+		[Test, Description("Check that different seeds produce different outcome")]
+		public void SeedTest()
+		{
+			// Arrange
+			int seed1 = 1337;
+			int seed2 = 13370;
+
+			int rounds = 100;
+
+			GuidGenerator gg1 = new GuidGenerator();
+			GuidGenerator gg2 = new GuidGenerator();
+
+			List<object> gene1Objects = new List<object>(capacity: rounds);
+			List<object> gene2Objects = new List<object>(capacity: rounds);
+
+			// Act
+			var shouldBeValidInitResult1 = gg1.Init(null, seed1);
+			var shouldBeValidInitResult2 = gg2.Init(null, seed2);
+
+			for (int i = 0; i < rounds; i++)
+			{
+				var genResult1 = gg1.Generate();
+				var genResult2 = gg2.Generate();
+
+				gene1Objects.Add(genResult1.result);
+				gene2Objects.Add(genResult2.result);
+
+				gg1.NextStep();
+				gg2.NextStep();
+			}
+
+			CollectionAssert.AreNotEqual(gene1Objects, gene2Objects);
+		}
 	}
 }

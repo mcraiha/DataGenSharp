@@ -155,5 +155,39 @@ namespace Tests
 			Assert.IsNull(shouldBeInvalidGenerateResult1.result, "Returned object should be null");
 			Assert.IsFalse(string.IsNullOrEmpty(shouldBeInvalidGenerateResult1.possibleError), "There should be an error");
 		}
+
+		[Test, Description("Check that different seeds produce different outcome")]
+		public void SeedTest()
+		{
+			// Arrange
+			int seed1 = 1337;
+			int seed2 = 13370;
+
+			int rounds = 100;
+
+			BooleanGenerator bg1 = new BooleanGenerator();
+			BooleanGenerator bg2 = new BooleanGenerator();
+
+			List<object> gene1Objects = new List<object>(capacity: rounds);
+			List<object> gene2Objects = new List<object>(capacity: rounds);
+
+			// Act
+			var shouldBeValidInitResult1 = bg1.Init(null, seed1);
+			var shouldBeValidInitResult2 = bg2.Init(null, seed2);
+
+			for (int i = 0; i < rounds; i++)
+			{
+				var genResult1 = bg1.Generate();
+				var genResult2 = bg2.Generate();
+
+				gene1Objects.Add(genResult1.result);
+				gene2Objects.Add(genResult2.result);
+
+				bg1.NextStep();
+				bg2.NextStep();
+			}
+
+			CollectionAssert.AreNotEqual(gene1Objects, gene2Objects);
+		}
 	}
 }

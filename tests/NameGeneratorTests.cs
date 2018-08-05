@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using DatagenSharp;
+using System.Collections.Generic;
 
 namespace Tests
 {
@@ -64,6 +65,42 @@ namespace Tests
 
 			Assert.AreEqual(generated1.result, generated2.result);
 			Assert.AreNotEqual(generated1.result, generated3.result);
+		}
+
+		[Test, Description("Check that different seeds produce different outcome")]
+		public void SeedTest()
+		{
+			// Arrange
+			int seed1 = 1337;
+			int seed2 = 13370;
+
+			int rounds = 100;
+
+			string parameter = "random";
+
+			NameGenerator ng1 = new NameGenerator();
+			NameGenerator ng2 = new NameGenerator();
+
+			List<object> gene1Objects = new List<object>(capacity: rounds);
+			List<object> gene2Objects = new List<object>(capacity: rounds);
+
+			// Act
+			var shouldBeValidInitResult1 = ng1.Init(parameter, seed1);
+			var shouldBeValidInitResult2 = ng2.Init(parameter, seed2);
+
+			for (int i = 0; i < rounds; i++)
+			{
+				var genResult1 = ng1.Generate();
+				var genResult2 = ng2.Generate();
+
+				gene1Objects.Add(genResult1.result);
+				gene2Objects.Add(genResult2.result);
+
+				ng1.NextStep();
+				ng2.NextStep();
+			}
+
+			CollectionAssert.AreNotEqual(gene1Objects, gene2Objects);
 		}
 	}
 }

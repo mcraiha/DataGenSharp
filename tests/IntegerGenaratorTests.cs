@@ -137,5 +137,39 @@ namespace Tests
 				Assert.Less((int)val, range2.max);
 			}
 		}
+
+		[Test, Description("Check that different seeds produce different outcome")]
+		public void SeedTest()
+		{
+			// Arrange
+			int seed1 = 1337;
+			int seed2 = 13370;
+
+			int rounds = 100;
+
+			IntegerGenerator ig1 = new IntegerGenerator();
+			IntegerGenerator ig2 = new IntegerGenerator();
+
+			List<object> gene1Objects = new List<object>(capacity: rounds);
+			List<object> gene2Objects = new List<object>(capacity: rounds);
+
+			// Act
+			var shouldBeValidInitResult1 = ig1.Init(null, seed1);
+			var shouldBeValidInitResult2 = ig2.Init(null, seed2);
+
+			for (int i = 0; i < rounds; i++)
+			{
+				var genResult1 = ig1.Generate();
+				var genResult2 = ig2.Generate();
+
+				gene1Objects.Add(genResult1.result);
+				gene2Objects.Add(genResult2.result);
+
+				ig1.NextStep();
+				ig2.NextStep();
+			}
+
+			CollectionAssert.AreNotEqual(gene1Objects, gene2Objects);
+		}
 	}
 }
