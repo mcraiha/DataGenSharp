@@ -9,10 +9,10 @@ namespace DatagenSharp
 		private static readonly char entrySeparator = '|';
 		private static readonly char valueSeparator = '=';
 
-		public static Dictionary<string, string> GetParameterDictionary(string parameter)
+		public static Dictionary<string, object> GetParameterDictionary(string parameter)
 		{
 			// By default we ignore case for key, so "someValue" and "SOMEVALUE" are equal
-			Dictionary<string, string> returnDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+			Dictionary<string, object> returnDictionary = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
 			if (string.IsNullOrEmpty(parameter))
 			{
@@ -30,14 +30,14 @@ namespace DatagenSharp
 				}
 				else
 				{
-					returnDictionary[entry] = true.ToString(); 
+					returnDictionary[entry] = true; 
 				}
 			}
 
 			return returnDictionary;
 		}
 
-		public static bool ContainsKey(Dictionary<string, string> dict, List<string> parameterList)
+		public static bool ContainsKey(Dictionary<string, object> dict, List<string> parameterList)
 		{
 			if (dict == null || dict.Count < 1)
 			{
