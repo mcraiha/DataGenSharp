@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using DatagenSharp;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace Tests
 {
 	public class SomeSeparatedValueOutputTests
 	{
+		// New line in current system
+		private static string newLine = Environment.NewLine;
+
 		[SetUp]
 		public void Setup()
 		{
@@ -23,7 +27,7 @@ namespace Tests
 			string parameter = "csv";
 			List<object> headers = new List<object> {"one", "two", "three"};
 			List<object> values = new List<object> {1, 2, 3};
-			string expectedOutput = "one,two,three\r\n1,2,3\r\n";
+			string expectedOutput = $"one,two,three{newLine}1,2,3{newLine}";
 
 			// Act
 			(bool initSuccess, string possibleInitError) = csvOutput.Init(parameter, ms);
@@ -58,7 +62,7 @@ namespace Tests
 			string parameter = "tsv";
 			List<object> headers = new List<object> {"one", "two", "three"};
 			List<object> values = new List<object> {1, 2, 3};
-			string expectedOutput = "one\ttwo\tthree\r\n1\t2\t3\r\n";
+			string expectedOutput = $"one\ttwo\tthree{newLine}1\t2\t3{newLine}";
 
 			// Act
 			(bool initSuccess, string possibleInitError) = tsvOutput.Init(parameter, ms);
