@@ -67,6 +67,38 @@ namespace Tests
 			Assert.AreNotEqual(generated1.result, generated3.result);
 		}
 
+		[Test]
+		public void ContinuosGenerateFinnishLastNamesTest()
+		{
+			// Arrange
+			object initParameter = "language=finnish";
+			object generateParameter = "lastname";
+
+			int seed = 1337;
+
+			NameGenerator ng = new NameGenerator();
+
+			// Act
+			var shouldBeValidResult = ng.Init(initParameter, seed);
+			var generated1 = ng.Generate(generateParameter);
+			var generated2 = ng.Generate(generateParameter); // Same step should provide same result
+			ng.NextStep(); // Step increase should alter the result for next generate
+			var generated3 = ng.Generate(generateParameter);
+
+			// Assert
+			Assert.IsTrue(shouldBeValidResult.success);
+
+			Assert.IsTrue(generated1.success);
+			Assert.IsTrue(generated2.success);
+			Assert.IsTrue(generated3.success);
+
+			Assert.AreEqual("Korhonen", generated1.result, "Korhonen should be the first name in continous generation for finnish last names");
+			Assert.AreEqual("Virtanen", generated3.result, "Virtanen should be the second name in continous generation for finnish last names");
+
+			Assert.AreEqual(generated1.result, generated2.result);
+			Assert.AreNotEqual(generated1.result, generated3.result);
+		}
+
 		[Test, Description("Check that different seeds produce different outcome")]
 		public void SeedTest()
 		{

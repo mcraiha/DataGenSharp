@@ -28,6 +28,8 @@ namespace DatagenSharp
 		private static readonly List<string> randomAliases = new List<string>() {"random", "rng"};
 		private static readonly List<string> weightedRandomAliases = new List<string>() {"weightedrandom", "wrng"};
 
+		private static readonly List<string> languageAliases = new List<string>() {"language", "lang"};
+
 		private enum GenerateMode
 		{
 			Continuos = 0,
@@ -72,6 +74,22 @@ namespace DatagenSharp
 				else if (ParameterParser.ContainsKey(parsedParams, weightedRandomAliases))
 				{
 					this.currentMode = GenerateMode.WeightedRandom;
+				}
+				else if (ParameterParser.ContainsKey(parsedParams, languageAliases))
+				{
+					foreach (string languageAlias in languageAliases)
+					{
+						if (parsedParams.ContainsKey(languageAlias))
+						{
+							foreach (string language in Enum.GetNames(typeof(GenerateLanguage)))
+							{
+								if (String.Equals(language, (string)parsedParams[languageAlias], StringComparison.InvariantCultureIgnoreCase))
+								{
+									this.generateLanguage = (GenerateLanguage)Enum.Parse(typeof(GenerateLanguage), language);
+								}
+							}
+						}
+					}
 				}
 			}
 			else
