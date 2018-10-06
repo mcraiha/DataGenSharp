@@ -16,7 +16,7 @@ Current [nuget release](https://www.nuget.org/packages/LibDataGenSharp/) is 0.9
 // Arrange
 GenerateData generateData = new GenerateData();
 RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
-generateData.chain.DataGenerators.Add(runningNumberGenerator);
+generateData.AddGeneratorToChain(runningNumberGenerator);
 
 NameGenerator nameGenerator = new NameGenerator();
 nameGenerator.Init(null, seed: 1337);
@@ -90,6 +90,7 @@ Move to [tests](tests) folder if you aren't there yet
 * nunit
 * NUnit3TestAdapter
 * Microsoft.NET.Test.Sdk
+* Newtonsoft.Json
 
 All requirements are restored when you run
 ```bash
@@ -114,6 +115,7 @@ dotnet test
 * Boolean mutator
 * Guid generator
 * Integer generator
+* IPv4 generator
 
 ## What is work in progress
 * Nuget
