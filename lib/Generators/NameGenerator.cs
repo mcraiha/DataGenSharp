@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace DatagenSharp
 {
@@ -13,11 +15,13 @@ namespace DatagenSharp
 
 		private static readonly Type[] supportedTypes = new Type[] { typeof(string) };
 
-		private static readonly List<(GenerateLanguage language, List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames)> languagesAndNames = new List<(GenerateLanguage language, List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames)>()
+		private static readonly Dictionary<GenerateLanguage, (string firstNamesMaleResource, string firstNamesFemaleResource, string lastNamesResource)> languageResources = new Dictionary<GenerateLanguage, (string firstNamesMaleResource, string firstNamesFemaleResource, string lastNamesResource)>()
 		{
-			(GenerateLanguage.EnglishUS,   EnglishUSMaleFirstNames,    EnglishUSFemaleFirstNames,  EnglishUSLastNames),
-			(GenerateLanguage.Finnish,     FinnishMaleFirstNames,      FinnishFemaleFirstNames,    FinnishLastNames),		
+			{ GenerateLanguage.EnglishUS,   ("Generators/Resources/EnglishUsMaleFirstNames.txt",    "Generators/Resources/EnglishUsFemaleFirstNames.txt",  "Generators/Resources/EnglishUsLastNames.txt")},
+			{ GenerateLanguage.Finnish,     ("Generators/Resources/FinnishMaleFirstNames.txt",      "Generators/Resources/FinnishFemaleFirstNames.txt",    "Generators/Resources/FinnishLastNames.txt")},	
 		};
+
+		private static Dictionary<GenerateLanguage, (List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames)> languageDatas = new Dictionary<GenerateLanguage, (List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames)>();
 
 		private enum GenerateLanguage
 		{
@@ -99,7 +103,7 @@ namespace DatagenSharp
 			}
 
 			// Select language
-			var chosenLanguageSettings = languagesAndNames.Find(element => element.language == this.generateLanguage);
+			var chosenLanguageSettings = CheckAndGenerateLanguageDataIfNeeded(this.generateLanguage);
 			this.chosenFirstNames = NameMixer.CombineNames(chosenLanguageSettings.firstNamesMale, chosenLanguageSettings.firstNamesFemale);
 			this.chosenLastNames = chosenLanguageSettings.lastNames;
 
@@ -196,6 +200,45 @@ namespace DatagenSharp
 		private void GenerateWeightedNumbers()
 		{
 
+		}
+
+		private static (List<NameWeightPair> firstNamesMale, List<NameWeightPair> firstNamesFemale, List<NameWeightPair> lastNames) CheckAndGenerateLanguageDataIfNeeded(GenerateLanguage chosenLanguage)
+		{
+			// Check chosen language lists are already generated
+			if (!languageDatas.ContainsKey(chosenLanguage))
+			{
+				// Generate those since they are missing
+				var resourceNames = languageResources[chosenLanguage];
+				var tempMaleFirstNames = LoadNames(resourceNames.firstNamesMaleResource);
+				var tempFemaleFirstNames = LoadNames(resourceNames.firstNamesFemaleResource);
+				var tempLastNames = LoadNames(resourceNames.lastNamesResource);
+
+				languageDatas[chosenLanguage] = (tempMaleFirstNames, tempFemaleFirstNames, tempLastNames);
+			}
+
+			return languageDatas[chosenLanguage];
+		}
+
+		private static List<NameWeightPair> LoadNames(string resourceToLoad)
+		{
+			List<NameWeightPair> pairsToReturn = new List<NameWeightPair>();
+			Stream namesStream = ResourceHelper.LoadResourceStream(resourceToLoad, typeof(NameGenerator).GetTypeInfo().Assembly);
+			using (StreamReader sr = new StreamReader(namesStream)) 
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null) 
+                {
+					if (line.StartsWith("//"))
+					{
+						continue;
+					}
+
+                    string[] splitted = line.Split(',');
+					pairsToReturn.Add(new NameWeightPair(splitted[0], int.Parse(splitted[1].Replace("_", ""))));
+                }
+            }
+
+			return pairsToReturn;
 		}
 	}
 }

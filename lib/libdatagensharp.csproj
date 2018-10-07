@@ -12,4 +12,8 @@
     <RepositoryUrl>https://github.com/mcraiha/DataGenSharp.git</RepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Generators/Resources/*.txt" />
+  </ItemGroup>
+
 </Project>
