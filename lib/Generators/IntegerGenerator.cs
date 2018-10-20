@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace DatagenSharp
 {
@@ -9,7 +10,7 @@ namespace DatagenSharp
 		
 		public static readonly string Description = "Generate integer values (1, 2, 3 etc.)";
 
-		public static readonly string VersionNumber = "0.91";
+		public static readonly string VersionNumber = "0.92";
 
 		private static readonly Type[] supportedOutputTypes = new Type[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(string) };
 
@@ -119,7 +120,7 @@ namespace DatagenSharp
 
 							if (tOfMax == typeof(int))
 							{
-								this.currentMaxExclusive = (long) (int) this.currentMinInclusive;
+								this.currentMaxExclusive = (long) (int) this.currentMaxExclusive;
 							}
 						}
 
@@ -213,6 +214,9 @@ namespace DatagenSharp
 			return supportedOutputTypes;
 		}
 
+		private static readonly BigInteger rangeDivider = new BigInteger(ulong.MaxValue);
+		private static byte[] randomBytesForULong = new byte[8];
+
 		public void NextStep()
 		{
 			if (this.chosenMode == GenerateMode.Random)
@@ -220,11 +224,19 @@ namespace DatagenSharp
 				// Generate new
 				if (this.generateType == typeof(int))
 				{
-					this.currentValue = rng.Next((int)this.currentMinInclusive, (int)this.currentMaxExclusive);
+					this.currentValue = this.rng.Next((int)this.currentMinInclusive, (int)this.currentMaxExclusive);
 				}
 				else if (this.generateType == typeof(long))
 				{
-					// TODO: Random does not have long support build-in
+					// This is slow, but it should somewhat work
+					BigInteger rangeStart = new BigInteger((long)currentMinInclusive);
+					BigInteger rangeEnd = new BigInteger((long)currentMaxExclusive);				
+					rangeEnd--;
+					BigInteger range = rangeEnd - rangeStart;
+					this.rng.NextBytes(randomBytesForULong);
+					BigInteger rangeMultiplier = new BigInteger(BitConverter.ToUInt64(randomBytesForULong, 0));
+					BigInteger result = rangeStart + (range * rangeMultiplier / rangeDivider);
+					this.currentValue = (long)result;
 				}
 			}
 			else if (this.chosenMode == GenerateMode.WeightedRandom)
