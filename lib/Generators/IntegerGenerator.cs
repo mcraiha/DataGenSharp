@@ -9,9 +9,9 @@ namespace DatagenSharp
 		
 		public static readonly string Description = "Generate integer values (1, 2, 3 etc.)";
 
-		public static readonly string VersionNumber = "0.9";
+		public static readonly string VersionNumber = "0.91";
 
-		private static readonly Type[] supportedOutputTypes = new Type[] { typeof(int), typeof(long), typeof(string) };
+		private static readonly Type[] supportedOutputTypes = new Type[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(string) };
 
 		private static readonly List<string> randomModeKeywords = new List<string>() {"random", "rng"};
 
@@ -154,11 +154,47 @@ namespace DatagenSharp
 
 			if (wantedOutput == null || wantedOutput == typeof(int))
 			{
-				// Limit to int
+				// Limit to int if needed
+				if (this.generateType == typeof(long))
+				{
+					if ((long)this.currentValue < int.MinValue)
+					{
+						returnValue = int.MinValue;
+					}
+					else if ((long)this.currentValue > int.MaxValue)
+					{
+						returnValue = int.MaxValue;
+					}
+				}
 			}
 			else if (wantedOutput == typeof(long))
 			{
 				// Cast to long
+				returnValue = (long)this.currentValue;
+			}
+			else if (wantedOutput == typeof(float))
+			{
+				// Cast to float
+				if (this.generateType == typeof(int))
+				{
+					returnValue = (float)(int)this.currentValue;
+				}
+				else if (this.generateType == typeof(long))
+				{
+					returnValue = (float)(long)this.currentValue;
+				}
+			}
+			else if (wantedOutput == typeof(double))
+			{
+				// Cast to double
+				if (this.generateType == typeof(int))
+				{
+					returnValue = (double)(int)this.currentValue;
+				}
+				else if (this.generateType == typeof(long))
+				{
+					returnValue = (double)(long)this.currentValue;
+				}
 			}
 			else if (wantedOutput == typeof(string))
 			{

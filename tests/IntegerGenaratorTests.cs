@@ -138,6 +138,80 @@ namespace Tests
 			}
 		}
 
+		[Test, Description("Check that floats are outputted")]
+		public void FloatTest()
+		{
+			// Arrange
+			int seed = 1337;
+
+			int rounds = 100;
+
+			Type floatType = typeof(float);
+
+			IntegerGenerator ig1 = new IntegerGenerator();
+
+			List<object> gene1Objects = new List<object>(capacity: rounds);
+			List<bool> gene1Success = new List<bool>(capacity: rounds);
+
+			// Act
+			var shouldBeValidInitResult1 = ig1.Init(null, seed);
+
+			for (int i = 0; i < rounds; i++)
+			{
+				var genResult1 = ig1.Generate(null, wantedOutput: floatType);
+				gene1Objects.Add(genResult1.result);
+				gene1Success.Add(genResult1.success);
+
+				ig1.NextStep();
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success, "Init should have been successful");
+			Assert.IsTrue(string.IsNullOrEmpty(shouldBeValidInitResult1.possibleError), "Init should NOT have an error");
+
+			Assert.AreEqual(rounds, gene1Objects.Count);
+			Assert.AreEqual(rounds, gene1Success.Count);
+
+			CollectionAssert.AllItemsAreInstancesOfType(gene1Objects, floatType, "There should be only floats generated");
+		}
+
+		[Test, Description("Check that doubles are outputted")]
+		public void DoubleTest()
+		{
+			// Arrange
+			int seed = 1337;
+
+			int rounds = 100;
+
+			Type doubleType = typeof(double);
+
+			IntegerGenerator ig1 = new IntegerGenerator();
+
+			List<object> gene1Objects = new List<object>(capacity: rounds);
+			List<bool> gene1Success = new List<bool>(capacity: rounds);
+
+			// Act
+			var shouldBeValidInitResult1 = ig1.Init(null, seed);
+
+			for (int i = 0; i < rounds; i++)
+			{
+				var genResult1 = ig1.Generate(null, wantedOutput: doubleType);
+				gene1Objects.Add(genResult1.result);
+				gene1Success.Add(genResult1.success);
+
+				ig1.NextStep();
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success, "Init should have been successful");
+			Assert.IsTrue(string.IsNullOrEmpty(shouldBeValidInitResult1.possibleError), "Init should NOT have an error");
+
+			Assert.AreEqual(rounds, gene1Objects.Count);
+			Assert.AreEqual(rounds, gene1Success.Count);
+
+			CollectionAssert.AllItemsAreInstancesOfType(gene1Objects, doubleType, "There should be only doubles generated");
+		}
+
 		[Test, Description("Check that different seeds produce different outcome")]
 		public void SeedTest()
 		{
