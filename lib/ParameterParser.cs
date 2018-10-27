@@ -55,6 +55,24 @@ namespace DatagenSharp
 			return false;
 		}
 
+		public static string GetValueWithKeys(Dictionary<string, object> dict, List<string> parameterList)
+		{
+			if (dict == null || dict.Count < 1)
+			{
+				return null;
+			}
+
+			foreach (string parameter in parameterList)
+			{
+				if (dict.ContainsKey(parameter))
+				{
+					return (string)dict[parameter];
+				}
+			}
+
+			return null;
+		}
+
 		#endregion // String
 
 
