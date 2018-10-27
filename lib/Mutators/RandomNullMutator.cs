@@ -5,6 +5,8 @@ namespace DatagenSharp
 	public class RandomNullMutator : IMutator
 	{
 		public static readonly string LongName = "RandomNullMutator";
+
+		public static readonly string ShortName = "RNGNULL";
 		
 		public static readonly string Description = "Replaces input value randomly with NULL";
 
@@ -51,6 +53,11 @@ namespace DatagenSharp
 		public Type[] GetSupportedOutputs()
 		{
 			return supportedTypes;
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 
 		private bool ParseThreshold(object parameter)

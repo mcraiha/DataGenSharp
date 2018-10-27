@@ -8,6 +8,8 @@ namespace DatagenSharp
 	public partial class NameGenerator : IDataGenerator
 	{
 		public static readonly string LongName = "NameGenerator";
+
+		public static readonly string ShortName = "NAME";
 		
 		public static readonly string Description = "Generator for outputting names, e.g. 'John Smith'";
 
@@ -188,6 +190,11 @@ namespace DatagenSharp
 			{
 				this.GenerateWeightedNumbers();
 			}		
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 
 		private void GenerateNumbers()

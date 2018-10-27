@@ -9,5 +9,11 @@ namespace DatagenSharp
 		(bool success, string possibleError, object result) Mutate(object input, object parameter = null, Type wantedOutputType = null);
 
 		Type[] GetSupportedOutputs();
+
+		#region Non essentials
+
+		(string longName, string shortName) GetNames();
+
+		#endregion // Non essentials
 	}
 }

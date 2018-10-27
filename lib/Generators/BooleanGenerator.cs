@@ -6,6 +6,7 @@ namespace DatagenSharp
 	public class BooleanGenerator : IDataGenerator
 	{
 		public static readonly string LongName = "BooleanGenerator";
+		public static readonly string ShortName = "BOOL";
 		
 		public static readonly string Description = "Generate boolean values (true or false)";
 
@@ -107,6 +108,11 @@ namespace DatagenSharp
 				// Alternate between true and false
 				this.currentValue = !this.currentValue;
 			}
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 	}
 }

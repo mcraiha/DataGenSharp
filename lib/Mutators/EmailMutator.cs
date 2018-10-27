@@ -29,6 +29,8 @@ namespace DatagenSharp
 		private static readonly char defaultNameSeparator = '.';
 
 		public static readonly string LongName = "EmailMutator";
+
+		public static readonly string ShortName = "EMAIL";
 		
 		public static readonly string Description = "Turns input to email address";
 
@@ -78,6 +80,10 @@ namespace DatagenSharp
 			return supportedOutputTypes;
 		}
 
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
+		}
 		
 		private static string ModifyForEmail(string input)
 		{

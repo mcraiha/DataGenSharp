@@ -7,6 +7,8 @@ namespace DatagenSharp
 	public class IPv4Generator : IDataGenerator
 	{
 		public static readonly string LongName = "IPv4Generator";
+
+		public static readonly string ShortName = "IPV4";
 		
 		public static readonly string Description = "Generate IPv4 addresses (e.g. 145.11.23.1)";
 
@@ -94,6 +96,11 @@ namespace DatagenSharp
 		public void NextStep()
 		{
 			this.rng.NextBytes(currentValue);
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 	}
 }

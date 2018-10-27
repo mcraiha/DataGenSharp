@@ -4,6 +4,10 @@ namespace DatagenSharp
 {
 	public class RunningNumberGenerator : IDataGenerator
 	{
+		public static readonly string LongName = "RunningNumberGenerator";
+
+		public static readonly string ShortName = "RUN";
+
 		private static readonly Type[] supportedTypes = new Type[] { typeof(int), typeof(string) };
 
 		private int currentValue = 0;
@@ -27,6 +31,11 @@ namespace DatagenSharp
 		public void NextStep()
 		{
 			currentValue++;
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 	}
 }

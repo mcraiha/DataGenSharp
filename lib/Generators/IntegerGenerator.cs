@@ -7,6 +7,8 @@ namespace DatagenSharp
 	public class IntegerGenerator : IDataGenerator
 	{
 		public static readonly string LongName = "IntegerGenerator";
+
+		public static readonly string ShortName = "INT";
 		
 		public static readonly string Description = "Generate integer values (1, 2, 3 etc.)";
 
@@ -243,6 +245,11 @@ namespace DatagenSharp
 			{
 				// TODO: Add code
 			}
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 
 		public (object minRangeInclusive, object maxRangeExclusive) GetRange()

@@ -7,6 +7,8 @@ namespace DatagenSharp
 	public class GuidGenerator : IDataGenerator
 	{
 		public static readonly string LongName = "GuidGenerator";
+
+		public static readonly string ShortName = "GUID";
 		
 		public static readonly string Description = "Generate GUID values (e.g. 123e4567-e89b-12d3-a456-426655440000)";
 
@@ -76,6 +78,11 @@ namespace DatagenSharp
 		public void NextStep()
 		{
 			this.rng.NextBytes(currentValue);
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 	}
 }

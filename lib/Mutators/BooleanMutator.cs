@@ -10,6 +10,8 @@ namespace DatagenSharp
 		private static readonly char defaultValueSeparator = ',';
 
 		public static readonly string LongName = "BooleanMutator";
+
+		public static readonly string ShortName = "BOOL";
 		
 		public static readonly string Description = "Turns Boolean values into something else";
 
@@ -117,6 +119,11 @@ namespace DatagenSharp
 			}
 
 			return returnValue.ToArray();
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 	}
 }

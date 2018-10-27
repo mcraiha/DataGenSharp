@@ -11,5 +11,11 @@ namespace DatagenSharp
 		Type[] GetSupportedOutputs();
 
 		void NextStep();
+
+		#region Non essentials
+
+		(string longName, string shortName) GetNames();
+
+		#endregion // Non essentials
 	}
 }

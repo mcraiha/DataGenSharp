@@ -7,6 +7,7 @@ namespace DatagenSharp
 	public class BitcoinAddressGenerator : IDataGenerator
 	{
 		public static readonly string LongName = "BitcoinAddressGenerator";
+		public static readonly string ShortName = "BTC";
 		
 		public static readonly string Description = "Generate Bitcoin addresses (e.g. 1VLA7S6JPGSEP6DOZE9RBDN16IC860 )";
 
@@ -62,6 +63,11 @@ namespace DatagenSharp
 			// Only common P2PKH type BTC addresses are supported, see https://en.bitcoinwiki.org/wiki/Bitcoin_address
 			int randomLength = this.rng.Next(26, 34);
 			this.currentValue = "1" + GenerateBase58(this.rng, randomLength);
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 
 		private static readonly string validBase58Chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
