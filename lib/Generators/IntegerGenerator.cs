@@ -10,7 +10,7 @@ namespace DatagenSharp
 
 		public static readonly string ShortName = "INT";
 		
-		public static readonly string Description = "Generate integer values (1, 2, 3 etc.)";
+		public static readonly string Description = "Generate random integer values (1, 254654, 987984543 etc.)";
 
 		public static readonly string VersionNumber = "0.92";
 
