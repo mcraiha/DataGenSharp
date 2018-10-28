@@ -3,6 +3,7 @@ using DatagenSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Tests
 {
@@ -16,6 +17,14 @@ namespace Tests
 		[Test]
 		public void CompareMutatorNameUniqueness()
 		{
+			// UGLY HACK, since platform attribute does not work with dot net core + NUNIT, and core 2.0 tries to ComImport with Linux/Unix
+			// https://github.com/dotnet/coreclr/issues/16804
+			// https://github.com/dotnet/coreclr/issues/16804
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				Assert.Pass();
+			}
+
 			// Arrange
 			var interfaceType = typeof(IMutator);
 			var all = AppDomain.CurrentDomain.GetAssemblies()
