@@ -7,7 +7,7 @@ C# library for generating data, e.g. JSON and CSV/TSV files
 Because there are situations where I have to generate data for testing, so it is better to have a tool for that.
 
 ## Released version
-Current [nuget release](https://www.nuget.org/packages/LibDataGenSharp/) is 0.9
+Current [nuget release](https://www.nuget.org/packages/LibDataGenSharp/) is 0.9.1-git-8fd607a
 
 ## How to use
 1. Build .dll or include [lib folder](lib) in your project
