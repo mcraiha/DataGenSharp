@@ -4,7 +4,7 @@ C# library for generating data, e.g. JSON and CSV/TSV files
 [![Build Status](https://travis-ci.com/mcraiha/DataGenSharp.svg?branch=master)](https://travis-ci.com/mcraiha/DataGenSharp)
 
 ## Why
-Because there are situations where I have to generate data for testing, so it is better to have tool for that.
+Because there are situations where I have to generate data for testing, so it is better to have a tool for that.
 
 ## Released version
 Current [nuget release](https://www.nuget.org/packages/LibDataGenSharp/) is 0.9
@@ -16,6 +16,7 @@ Current [nuget release](https://www.nuget.org/packages/LibDataGenSharp/) is 0.9
 // Arrange
 GenerateData generateData = new GenerateData();
 RunningNumberGenerator runningNumberGenerator = new RunningNumberGenerator();
+runningNumberGenerator.Init(null, seed: 1337);
 generateData.AddGeneratorToChain(runningNumberGenerator);
 
 NameGenerator nameGenerator = new NameGenerator();
@@ -116,6 +117,7 @@ dotnet test
 * Guid generator
 * Integer generator
 * IPv4 generator
+* Bitcoin address generator
 
 ## What is work in progress
 * Nuget
@@ -126,7 +128,6 @@ dotnet test
 
 ## What is missing
 
-* CI
 * Benchmarks
 * Better help messages
 
