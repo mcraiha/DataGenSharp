@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace DatagenSharp
 {
+	/// <summary>
+	/// Helper class for accesing embedded resources in binary
+	/// </summary>
 	public static class ResourceHelper
 	{
 		public static string[] GetAllResourceNames(Assembly assembly)

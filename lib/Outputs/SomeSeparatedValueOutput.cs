@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace DatagenSharp
 {
+	/// <summary>
+	/// Class for creating value separated data, e.g. comma-separated values (CSV) or tab-separated values (TSV)
+	/// </summary>
 	public class SomeSeparatedValueOutput : IDataOutputter
 	{
 		public static readonly string LongName = "SomeSeparatedValueOutput";

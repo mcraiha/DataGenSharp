@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace DatagenSharp
 {
+	/// <summary>
+	/// Top level class for data generation
+	/// </summary>
 	public class GenerateData
 	{
 		public GenerateChain chain = new GenerateChain();

@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace DatagenSharp
 {
+	/// <summary>
+	/// Class for outputting Json data
+	/// </summary>
 	public class JsonOutput : IDataOutputter
 	{
 		public static readonly string LongName = "JsonOutput";
