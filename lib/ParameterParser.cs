@@ -6,8 +6,8 @@ namespace DatagenSharp
 	public static class ParameterParser
 	{
 		#region String
-		private static readonly char entrySeparator = '|';
-		private static readonly char valueSeparator = '=';
+		public static readonly char entrySeparator = '|';
+		public static readonly char valueSeparator = '=';
 
 		public static Dictionary<string, object> GetParameterDictionary(string parameter)
 		{
