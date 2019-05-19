@@ -283,5 +283,32 @@ namespace Tests
 			CollectionAssert.AllItemsAreInstancesOfType(gene1Objects, doubleType, "There should be only doubles generated");
 			CollectionAssert.AllItemsAreUnique(gene1Objects);
 		}
+
+		[Test, Description("Check that save aka serialization generates correct text")]
+		public void SaveTest()
+		{
+			// Arrange
+			int seed = 1337;
+
+			RunningNumberGenerator rg1 = new RunningNumberGenerator();
+			RunningNumberGenerator rg2 = new RunningNumberGenerator();
+			RunningNumberGenerator rg3 = new RunningNumberGenerator();
+			RunningNumberGenerator rg4 = new RunningNumberGenerator();
+
+			int start2 = 100;
+			int step2 = 137;
+			string initString2 = $"start={start2}|step={step2}";
+
+			// Act
+			var shouldBeValidInitResult1 = rg1.Init(null, seed);
+			string rg1String = rg1.Save();
+
+			var shouldBeValidInitResult2 = rg2.Init(initString2, seed);
+			string rg2String = rg2.Save();
+
+			// Assert
+			Assert.AreEqual("~~0", rg1String, "Default Init should not have anything to save");
+			Assert.AreEqual($"~{initString2}~0", rg2String, "Init string should be saved");
+		}
 	}
 }

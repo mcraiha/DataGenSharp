@@ -19,9 +19,11 @@ namespace DatagenSharp
 
 		private static readonly List<string> stepAliases = new List<string>() {"step", "inc", "increase"};
 
-		private long currentValue = 0;
+		private static readonly long currentValueDefault = 0;
+		private long currentValue = currentValueDefault;
 
-		private long step = 1;
+		private static readonly long stepDefault = 1;
+		private long step = stepDefault;
 
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
@@ -118,6 +120,44 @@ namespace DatagenSharp
 		public (string longName, string shortName) GetNames()
 		{
 			return (LongName, ShortName);
+		}
+
+		/// <summary>
+		/// Serialize RunningNumberGenerator 
+		/// </summary>
+		/// <returns></returns>
+		public string Save()
+		{
+			// Only serialize current value if it isn't default
+			string currentValueAsString = "";
+			if (this.currentValue != currentValueDefault)
+			{
+				currentValueAsString = $"{startAliases[0]}{ParameterParser.valueSeparator}{this.currentValue}";
+			}
+
+			// Only serialize step value if it isn't default
+			string stepAsString = "";
+			if (this.step != stepDefault)
+			{
+				stepAsString = $"{stepAliases[0]}{ParameterParser.valueSeparator}{this.step}";
+			}
+
+			string joined = "";
+
+			if (!string.IsNullOrEmpty(currentValueAsString) && !string.IsNullOrEmpty(stepAsString))
+			{
+				joined = $"{currentValueAsString}{ParameterParser.entrySeparator}{stepAsString}";
+			}
+			else if (!string.IsNullOrEmpty(currentValueAsString) && string.IsNullOrEmpty(stepAsString))
+			{
+				joined = currentValueAsString;
+			}
+			else if (string.IsNullOrEmpty(currentValueAsString) && !string.IsNullOrEmpty(stepAsString))
+			{
+				joined = stepAsString;
+			}
+
+			return $"{CommonSerialization.delimiter}{joined}{CommonSerialization.delimiter}0";
 		}
 	}
 }
