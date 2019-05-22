@@ -122,6 +122,11 @@ namespace DatagenSharp
 			return (LongName, ShortName);
 		}
 
+		/// <summary>
+		/// Deserialize RunningNumberGenerator
+		/// </summary>
+		/// <param name="parameter">String to deserialize</param>
+		/// <returns>Tuple that tells if everything went well, and possible error message</returns>
 		public (bool success, string possibleError) Load(string parameter)
 		{
 			if (!CommonSerialization.IsSomewhatValidGeneratorSaveData(parameter))
@@ -136,7 +141,7 @@ namespace DatagenSharp
 		/// <summary>
 		/// Serialize RunningNumberGenerator 
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>String serialization</returns>
 		public string Save()
 		{
 			// Only serialize current value if it isn't default
