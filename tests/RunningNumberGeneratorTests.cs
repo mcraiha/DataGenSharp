@@ -307,8 +307,46 @@ namespace Tests
 			string rg2String = rg2.Save();
 
 			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success);
+			Assert.IsTrue(shouldBeValidInitResult2.success);
+
 			Assert.AreEqual("~~0", rg1String, "Default Init should not have anything to save");
 			Assert.AreEqual($"~{initString2}~0", rg2String, "Init string should be saved");
+		}
+
+		[Test, Description("Check that load aka deserialization can handle valid input")]
+		public void LoadTest()
+		{
+			// Arrange
+			int seed = 1337;
+
+			int start = 100;
+			int step = 137;
+			string initString = $"start={start}|step={step}";
+			string loadString = $"~{initString}~0";
+
+			RunningNumberGenerator rg1 = new RunningNumberGenerator();
+			RunningNumberGenerator rg2 = new RunningNumberGenerator();
+
+			List<int> results1 = new List<int>();
+			List<int> results2 = new List<int>();
+
+			// Act
+			var shouldBeValidInitResult = rg1.Init(initString, seed);
+
+			var shouldBeValidLoadResult = rg2.Load(loadString);
+
+			for (int i = 0; i < 13; i++)
+			{
+				results1.Add((int)rg1.Generate().result);
+				results2.Add((int)rg2.Generate().result);
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult.success);
+			Assert.IsTrue(shouldBeValidLoadResult.success);
+
+			CollectionAssert.AreEqual(results1, results2);
 		}
 	}
 }

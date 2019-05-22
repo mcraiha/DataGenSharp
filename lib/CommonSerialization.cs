@@ -1,3 +1,6 @@
+using System.Linq;
+
+
 namespace DatagenSharp
 {
 	/// <summary>
@@ -16,5 +19,30 @@ namespace DatagenSharp
 		public static readonly char delimiter = '~';
 
 		public static readonly string nullValue = "NULL";
+
+		public static bool IsSomewhatValidGeneratorSaveData(string data)
+		{
+			return CountCertainChars(data, delimiter) == 2;
+		}
+
+		private static int CountCertainChars(string input, char countThese)
+		{
+			int returnValue = 0;
+
+			foreach (char c in input)
+			{
+				if (countThese == c)
+				{
+					returnValue++;
+				}
+			}
+
+			return returnValue;
+		}
+
+		public static string[] SplitGeneratorSaveData(string data)
+		{
+			return data.Split(delimiter).Skip(1).ToArray();
+		}
 	}
 }

@@ -122,6 +122,17 @@ namespace DatagenSharp
 			return (LongName, ShortName);
 		}
 
+		public (bool success, string possibleError) Load(string parameter)
+		{
+			if (!CommonSerialization.IsSomewhatValidGeneratorSaveData(parameter))
+			{
+				return (success: false, possibleError: $"Parameter: {parameter} given to {LongName} does NOT fulfill the requirements!");
+			}
+
+			string[] splitted = CommonSerialization.SplitGeneratorSaveData(parameter);
+			return this.Init(splitted[0], 0);
+		}
+
 		/// <summary>
 		/// Serialize RunningNumberGenerator 
 		/// </summary>
