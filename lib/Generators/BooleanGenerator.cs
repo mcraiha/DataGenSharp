@@ -29,6 +29,11 @@ namespace DatagenSharp
 
 		private bool currentValue = true;
 
+		/// <summary>
+		/// Stored seed, needed only for serialization purposes because there is no easy way to get seed back from Random
+		/// </summary>
+		private int storedSeed = 0;
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			if (parameter == null)
@@ -59,6 +64,7 @@ namespace DatagenSharp
 
 			if (this.chosenMode == GenerateMode.Random)
 			{
+				this.storedSeed = seed;
 				this.rng = new Random(seed);
 				this.currentValue = rng.Next(0, 2) == 0;
 			}
@@ -113,6 +119,33 @@ namespace DatagenSharp
 		public (string longName, string shortName) GetNames()
 		{
 			return (LongName, ShortName);
+		}
+
+		/// <summary>
+		/// Deserialize BooleanGenerator
+		/// </summary>
+		/// <param name="parameter">String to deserialize</param>
+		/// <returns>Tuple that tells if everything went well, and possible error message</returns>
+		public (bool success, string possibleError) Load(string parameter)
+		{
+			if (!CommonSerialization.IsSomewhatValidGeneratorSaveData(parameter))
+			{
+				return (success: false, possibleError: $"Parameter: {parameter} given to {LongName} does NOT fulfill the requirements!");
+			}
+
+			string[] splitted = CommonSerialization.SplitGeneratorSaveData(parameter);
+			return this.Init(splitted[0], int.Parse(splitted[1]));
+		}
+
+		/// <summary>
+		/// Serialize BooleanGenerator
+		/// </summary>
+		/// <returns>String serialization</returns>
+		public string Save()
+		{
+			string mode = this.chosenMode == GenerateMode.Random ? randomModeKeywords[0] : alternatingModeKeywords[0];
+			int seed = this.chosenMode == GenerateMode.Random ? this.storedSeed : 0;
+			return $"{CommonSerialization.delimiter}{mode}{CommonSerialization.delimiter}{seed}";
 		}
 	}
 }

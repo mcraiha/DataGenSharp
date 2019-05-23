@@ -189,5 +189,69 @@ namespace Tests
 
 			CollectionAssert.AreNotEqual(gene1Objects, gene2Objects);
 		}
+
+		[Test, Description("Check that save aka serialization generates correct text")]
+		public void SaveTest()
+		{
+			// Arrange
+			int seed = 1337;
+
+			BooleanGenerator bg1 = new BooleanGenerator();
+			BooleanGenerator bg2 = new BooleanGenerator();
+
+			string initString = $"random";
+
+			// Act
+			var shouldBeValidInitResult1 = bg1.Init(null, 0);
+			string bg1String = bg1.Save();
+
+			var shouldBeValidInitResult2 = bg2.Init(initString, seed);
+			string bg2String = bg2.Save();
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success);
+			Assert.IsTrue(shouldBeValidInitResult2.success);
+
+			Assert.AreEqual("~random~0", bg1String, "Default Init should store random");
+			Assert.AreEqual($"~{initString}~{seed}", bg2String, "Init string should be saved");
+		}
+
+		[Test, Description("Check that load aka deserialization can handle valid input")]
+		public void LoadTest()
+		{
+			// Arrange
+			int seed = 13237;
+
+			string loadString = $"~random~{seed}";
+
+			BooleanGenerator bg1 = new BooleanGenerator();
+			BooleanGenerator bg2 = new BooleanGenerator();
+			BooleanGenerator bg3 = new BooleanGenerator();
+
+			List<bool> results1 = new List<bool>();
+			List<bool> results2 = new List<bool>();
+			List<bool> results3 = new List<bool>();
+
+			// Act
+			var shouldBeValidInitResult1 = bg1.Init("random", seed);
+			var shouldBeValidInitResult2 = bg3.Init(null, 0);
+
+			var shouldBeValidLoadResult = bg2.Load(loadString);
+
+			for (int i = 0; i < 13; i++)
+			{
+				results1.Add((bool)bg1.Generate().result);
+				results2.Add((bool)bg2.Generate().result);
+				results3.Add((bool)bg3.Generate().result);
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success);
+			Assert.IsTrue(shouldBeValidInitResult2.success);
+			Assert.IsTrue(shouldBeValidLoadResult.success);
+
+			CollectionAssert.AreEqual(results1, results2);
+			CollectionAssert.AreNotEqual(results1, results3);
+		}
 	}
 }
