@@ -327,5 +327,70 @@ namespace Tests
 
 			CollectionAssert.AreNotEqual(gene1Objects, gene2Objects);
 		}
+
+		[Test, Description("Check that save aka serialization generates correct text")]
+		public void SaveTest()
+		{
+			// Arrange
+			int seed = 1337;
+
+			IntegerGenerator ig1 = new IntegerGenerator();
+			IntegerGenerator ig2 = new IntegerGenerator();
+
+			string initString = $"1,33";
+
+			// Act
+			var shouldBeValidInitResult1 = ig1.Init(null, 0);
+			string ig1String = ig1.Save();
+
+			var shouldBeValidInitResult2 = ig2.Init(initString, seed);
+			string ig2String = ig2.Save();
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success);
+			Assert.IsTrue(shouldBeValidInitResult2.success);
+
+			Assert.AreEqual("~~0", ig1String, "Default Init should not store any parameters");
+			Assert.AreEqual($"~{initString}~{seed}", ig2String, "Init string should be saved");
+		}
+
+		[Test, Description("Check that load aka deserialization can handle valid input")]
+		public void LoadTest()
+		{
+			// Arrange
+			int seed = 13237;
+			string range = "2,556";
+			string loadString = $"~{range}~{seed}";
+
+			IntegerGenerator ig1 = new IntegerGenerator();
+			IntegerGenerator ig2 = new IntegerGenerator();
+			IntegerGenerator ig3 = new IntegerGenerator();
+
+			List<int> results1 = new List<int>();
+			List<int> results2 = new List<int>();
+			List<int> results3 = new List<int>();
+
+			// Act
+			var shouldBeValidInitResult1 = ig1.Init(range, seed);
+			var shouldBeValidInitResult2 = ig3.Init(null, 0);
+
+			var shouldBeValidLoadResult = ig2.Load(loadString);
+
+			for (int i = 0; i < 13; i++)
+			{
+				results1.Add((int)ig1.Generate().result);
+				results2.Add((int)ig2.Generate().result);
+				results3.Add((int)ig3.Generate().result);
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success);
+			Assert.IsTrue(shouldBeValidInitResult2.success);
+			Assert.IsTrue(shouldBeValidLoadResult.success);
+
+			CollectionAssert.AreEqual(results1, results2);
+			Assert.IsTrue(results1.All(item => item >= 2 && item < 556));
+			CollectionAssert.AreNotEqual(results1, results3);
+		}
 	}
 }

@@ -50,6 +50,11 @@ namespace DatagenSharp
 
 		private object currentValue = true;
 
+		/// <summary>
+		/// Stored seed, needed only for serialization purposes because there is no easy way to get seed back from Random
+		/// </summary>
+		private int storedSeed = 0;
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			if (parameter == null)
@@ -140,6 +145,7 @@ namespace DatagenSharp
 			if (this.chosenMode == GenerateMode.Random)
 			{
 				this.rng = new Random(seed);
+				this.storedSeed = seed;
 				this.NextStep();
 			}
 			else if (this.chosenMode == GenerateMode.WeightedRandom)
@@ -255,6 +261,42 @@ namespace DatagenSharp
 		public (object minRangeInclusive, object maxRangeExclusive) GetRange()
 		{
 			return (this.currentMinInclusive, this.currentMaxExclusive);
+		}
+
+		/// <summary>
+		/// Deserialize IntegerGenerator
+		/// </summary>
+		/// <param name="parameter">String to deserialize</param>
+		/// <returns>Tuple that tells if everything went well, and possible error message</returns>
+		public (bool success, string possibleError) Load(string parameter)
+		{
+			if (!CommonSerialization.IsSomewhatValidGeneratorSaveData(parameter))
+			{
+				return (success: false, possibleError: $"Parameter: {parameter} given to {LongName} does NOT fulfill the requirements!");
+			}
+
+			string[] splitted = CommonSerialization.SplitGeneratorSaveData(parameter);
+			return this.Init(splitted[0], int.Parse(splitted[1]));
+		}
+
+		/// <summary>
+		/// Serialize IntegerGenerator
+		/// </summary>
+		/// <returns>String serialization</returns>
+		public string Save()
+		{
+			string joined = "";
+
+			bool isMinInt = this.currentMinInclusive != null && this.currentMinInclusive.GetType() == typeof(int);
+			bool isMaxInt = this.currentMaxExclusive != null && this.currentMaxExclusive.GetType() == typeof(int);
+			if (isMinInt && isMaxInt)
+			{
+				if ((int)this.currentMinInclusive != IntegerGenerator.defaultMinIntInclusive || (int)this.currentMaxExclusive != IntegerGenerator.defaultMaxIntExclusive)
+				{
+					joined = $"{this.currentMinInclusive}{rangeSeparators[0]}{this.currentMaxExclusive}";
+				}
+			}
+			return $"{CommonSerialization.delimiter}{joined}{CommonSerialization.delimiter}{this.storedSeed}";
 		}
 	}
 }
