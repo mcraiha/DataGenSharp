@@ -19,11 +19,27 @@ namespace DatagenSharp
 
 		private string currentValue = null;
 
+		/// <summary>
+		/// Stored seed, needed only for serialization purposes because there is no easy way to get seed back from Random
+		/// </summary>
+		private int storedSeed = 0;
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			if (parameter == null)
 			{
 
+			}
+			else if (parameter.GetType() == typeof(string))
+			{
+				if (string.IsNullOrEmpty((string)parameter))
+				{
+
+				}
+				else
+				{
+					return (success: false, possibleError: ErrorMessages.UnsupportedParameterType(LongName, "Init", parameter.GetType()));
+				}
 			}
 			else
 			{
@@ -31,6 +47,8 @@ namespace DatagenSharp
 			}
 
 			this.rng = new Random(seed);
+
+			this.storedSeed = seed;
 
 			this.NextStep();
 
@@ -68,6 +86,31 @@ namespace DatagenSharp
 		public (string longName, string shortName) GetNames()
 		{
 			return (LongName, ShortName);
+		}
+
+		/// <summary>
+		/// Deserialize BitcoinAddressGenerator
+		/// </summary>
+		/// <param name="parameter">String to deserialize</param>
+		/// <returns>Tuple that tells if everything went well, and possible error message</returns>
+		public (bool success, string possibleError) Load(string parameter)
+		{
+			if (!CommonSerialization.IsSomewhatValidGeneratorSaveData(parameter))
+			{
+				return (success: false, possibleError: $"Parameter: {parameter} given to {LongName} does NOT fulfill the requirements!");
+			}
+
+			string[] splitted = CommonSerialization.SplitGeneratorSaveData(parameter);
+			return this.Init(splitted[0], int.Parse(splitted[1]));
+		}
+
+		/// <summary>
+		/// Serialize BitcoinAddressGenerator
+		/// </summary>
+		/// <returns>String serialization</returns>
+		public string Save()
+		{
+			return $"{CommonSerialization.delimiter}{CommonSerialization.delimiter}{this.storedSeed}";
 		}
 
 		private static readonly string validBase58Chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";

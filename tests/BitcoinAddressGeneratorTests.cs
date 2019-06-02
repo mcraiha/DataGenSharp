@@ -109,5 +109,61 @@ namespace Tests
 
 			CollectionAssert.AreNotEqual(gene1Objects, gene2Objects);
 		}
+
+		[Test, Description("Check that save aka serialization generates correct text")]
+		public void SaveTest()
+		{
+			// Arrange
+			int seed = 1337;
+
+			BitcoinAddressGenerator bag1 = new BitcoinAddressGenerator();
+
+			// Act
+			var shouldBeValidInitResult1 = bag1.Init(null, seed);
+			string bg1String = bag1.Save();
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success);
+
+			Assert.AreEqual($"~~{seed}", bg1String, "Default Init should store seed");
+		}
+
+		[Test, Description("Check that load aka deserialization can handle valid input")]
+		public void LoadTest()
+		{
+			// Arrange
+			int seed = 13237;
+
+			string loadString = $"~~{seed}";
+
+			BitcoinAddressGenerator bag1 = new BitcoinAddressGenerator();
+			BitcoinAddressGenerator bag2 = new BitcoinAddressGenerator();
+			BitcoinAddressGenerator bag3 = new BitcoinAddressGenerator();
+
+			List<string> results1 = new List<string>();
+			List<string> results2 = new List<string>();
+			List<string> results3 = new List<string>();
+
+			// Act
+			var shouldBeValidInitResult1 = bag1.Init(null, seed);
+			var shouldBeValidInitResult2 = bag3.Init(null, 0);
+
+			var shouldBeValidLoadResult = bag2.Load(loadString);
+
+			for (int i = 0; i < 13; i++)
+			{
+				results1.Add((string)bag1.Generate().result);
+				results2.Add((string)bag2.Generate().result);
+				results3.Add((string)bag3.Generate().result);
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success);
+			Assert.IsTrue(shouldBeValidInitResult2.success);
+			Assert.IsTrue(shouldBeValidLoadResult.success);
+
+			CollectionAssert.AreEqual(results1, results2);
+			CollectionAssert.AreNotEqual(results1, results3);
+		}
 	}
 }
