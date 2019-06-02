@@ -77,5 +77,55 @@ namespace Tests
 			Assert.AreEqual("67.94.2.170", stringAddresses[0], "Selected seed should always generate this result");
 			Assert.AreEqual(2852281923, uintAddresses[0], "Selected seed should always generate this result");
 		}
+
+		[Test, Description("Check that save aka serialization generates correct text")]
+		public void SaveTest()
+		{
+			// Arrange
+			int seed = 1337;
+
+			IPv4Generator ip1 = new IPv4Generator();
+
+			// Act
+			var shouldBeValidInitResult1 = ip1.Init(null, seed);
+			string rg1String = ip1.Save();
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult1.success);
+
+			Assert.AreEqual($"~~{seed}", rg1String, "Default Init should have seed in save");
+		}
+
+		[Test, Description("Check that load aka deserialization can handle valid input")]
+		public void LoadTest()
+		{
+			// Arrange
+			int seed = 13367;
+
+			string loadString = $"~~{seed}";
+
+			IPv4Generator ip1 = new IPv4Generator();
+			IPv4Generator ip2 = new IPv4Generator();
+
+			List<string> results1 = new List<string>();
+			List<string> results2 = new List<string>();
+
+			// Act
+			var shouldBeValidInitResult = ip1.Init(null, seed);
+
+			var shouldBeValidLoadResult = ip2.Load(loadString);
+
+			for (int i = 0; i < 13; i++)
+			{
+				results1.Add((string)ip1.Generate().result);
+				results2.Add((string)ip2.Generate().result);
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidInitResult.success);
+			Assert.IsTrue(shouldBeValidLoadResult.success);
+
+			CollectionAssert.AreEqual(results1, results2);
+		}
 	}
 }
