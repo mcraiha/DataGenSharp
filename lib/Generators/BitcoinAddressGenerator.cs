@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DatagenSharp
 {
-	public class BitcoinAddressGenerator : IDataGenerator
+	public class BitcoinAddressGenerator : IDataGenerator, ISerialization
 	{
 		public static readonly string LongName = "BitcoinAddressGenerator";
 		public static readonly string ShortName = "BTC";

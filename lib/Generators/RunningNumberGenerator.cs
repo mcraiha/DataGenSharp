@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DatagenSharp
 {
-	public class RunningNumberGenerator : IDataGenerator
+	public class RunningNumberGenerator : IDataGenerator, ISerialization
 	{
 		public static readonly string LongName = "RunningNumberGenerator";
 

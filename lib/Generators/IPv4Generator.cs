@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DatagenSharp
 {
-	public class IPv4Generator : IDataGenerator
+	public class IPv4Generator : IDataGenerator, ISerialization
 	{
 		public static readonly string LongName = "IPv4Generator";
 

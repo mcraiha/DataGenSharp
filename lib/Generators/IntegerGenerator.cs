@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace DatagenSharp
 {
-	public class IntegerGenerator : IDataGenerator
+	public class IntegerGenerator : IDataGenerator, ISerialization
 	{
 		public static readonly string LongName = "IntegerGenerator";
 
