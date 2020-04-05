@@ -1,5 +1,5 @@
 # DataGenSharp
-C# library for generating data, e.g. JSON and CSV/TSV files
+C# managed library for generating data, e.g. JSON and CSV/TSV files
 
 [![Build Status](https://travis-ci.com/mcraiha/DataGenSharp.svg?branch=master)](https://travis-ci.com/mcraiha/DataGenSharp)
 
