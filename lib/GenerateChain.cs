@@ -8,7 +8,7 @@ namespace DatagenSharp
 	{
 		public List<IDataGenerator> DataGenerators = new List<IDataGenerator>();
 
-		public List<(string name, IDataGenerator generator, Type wantedOutput, MutatorChain mutatorChain, object parameter)> WantedElements = new List<(string, IDataGenerator, Type, MutatorChain, object)>();
+		public List<(string name, IDataGenerator generator, object parameter, Type wantedOutput, MutatorChain mutatorChain)> WantedElements = new List<(string, IDataGenerator,  object, Type, MutatorChain)>();
 
 		public List<string> GetNames()
 		{
