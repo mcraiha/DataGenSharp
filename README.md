@@ -23,9 +23,9 @@ NameGenerator nameGenerator = new NameGenerator();
 nameGenerator.Init(null, seed: 1337);
 generateData.AddGeneratorToChain(nameGenerator);
 
-generateData.AddWantedElement(("Id", runningNumberGenerator, typeof(int), null, null));
-generateData.AddWantedElement(("Firstname", nameGenerator, typeof(string), null, "firstname"));
-generateData.AddWantedElement(("Lastname", nameGenerator, typeof(string), null, "lastname"));
+generateData.AddWantedElement(("Id", runningNumberGenerator, null, typeof(int), null));
+generateData.AddWantedElement(("Firstname", nameGenerator, "firstname", typeof(string), null));
+generateData.AddWantedElement(("Lastname", nameGenerator, "lastname", typeof(string), null));
 
 SomeSeparatedValueOutput outCSV = new SomeSeparatedValueOutput();
 generateData.output = outCSV;

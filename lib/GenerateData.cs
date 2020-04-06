@@ -77,9 +77,9 @@ namespace DatagenSharp
 		/// </summary>
 		/// <param name="name">Name of wanted element. e.g. "Id", "Name", "Email"</param>
 		/// <param name="generator">Generator that will be generating the content for the element</param>
+		/// <param name="parameter">Optional parameter for the generator</param>
 		/// <param name="wantedOutput">Output type wanted to generate</param>
 		/// <param name="mutatorChain">Optional mutator chain that will mutate the output</param>
-		/// <param name="parameter">Optional parameter for the generator</param>
 		public void AddWantedElement((string name, IDataGenerator generator, object parameter, Type wantedOutput, MutatorChain mutatorChain) wantedElement)
 		{
 			this.chain.WantedElements.Add(wantedElement);
@@ -90,9 +90,9 @@ namespace DatagenSharp
 		/// </summary>
 		/// <param name="name">Name of wanted element. e.g. "Id", "Name", "Email"</param>
 		/// <param name="generator">Generator that will be generating the content for the element</param>
+		/// <param name="parameter">Optional parameter for the generator</param>
 		/// <param name="wantedOutput">Output type wanted to generate</param>
 		/// <param name="mutatorChain">Optional mutator chain that will mutate the output</param>
-		/// <param name="parameter">Optional parameter for the generator</param>
 		public void AddWantedElement(string name, IDataGenerator generator, object parameter, Type wantedOutput, MutatorChain mutatorChain)
 		{
 			this.AddWantedElement((name, generator, parameter, wantedOutput, mutatorChain));
