@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace DatagenSharp
 {
@@ -109,7 +110,12 @@ namespace DatagenSharp
 
 		public string Save()
 		{
-			return "";
+			StringBuilder sb = new StringBuilder();
+
+			sb.AppendLine(CommonSerialization.header);
+			sb.AppendLine(this.chain.Save());
+
+			return sb.ToString();
 		}
 
 		#endregion // Serialization
