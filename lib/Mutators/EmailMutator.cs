@@ -47,7 +47,7 @@ namespace DatagenSharp
 
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
-			// TODO: Add some parameters here (keep case, name separator override, add single doman mode etc.)
+			// TODO: Add some parameters here (keep case, name separator override, add single domain mode etc.)
 			this.rng = new Random(seed);
 			return (success: true, possibleError: "");
 		}
