@@ -1,30 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DatagenSharp
 {
-	public class MutatorChain
+	public class MutatorChain : ISerialization
 	{
 		private List<(IMutator mutator, object parameters, Type wantedOutput)> chain = new List<(IMutator mutator, object parameters, Type wantedOutput)>();
 
 		public (bool success, string possibleError) AddMutatorToChain(IMutator mutator, object parameters, Type wantedOutput)
 		{
 			// TODO: check if chain is compatible
-			chain.Add((mutator, parameters, wantedOutput));
+			this.chain.Add((mutator, parameters, wantedOutput));
 
 			return (success: true, possibleError: "");
 		}
 
 		public (bool success, string possibleError, object result) RunChainOneStep(object input)
 		{
-			if (chain == null || chain.Count == 0)
+			if (this.chain == null || this.chain.Count == 0)
 			{
 				return (success: true, possibleError: "", result: input);
 			}
 
 			object tempObject = input;
 
-			foreach (var mutatorEntry in chain)
+			foreach (var mutatorEntry in this.chain)
 			{
 				(bool mutateSuccess, string possibleMutateError, object mutateResult) = mutatorEntry.mutator.Mutate(tempObject, mutatorEntry.parameters, mutatorEntry.wantedOutput);
 
@@ -38,5 +39,28 @@ namespace DatagenSharp
 
 			return (success: true, possibleError: "", result: tempObject);
 		}
+
+		#region Serialization
+		public (bool success, string possibleError) Load(string parameter)
+		{
+			return (true, "");
+		}
+
+		public string Save()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			foreach ((IMutator mutator, object parameters, Type wantedOutput) in this.chain)
+			{
+				if (mutator is ISerialization serialization)
+				{
+					sb.Append($"{wantedOutput} {mutator.GetNames().shortName}{serialization.Save()} ");
+				}
+			}
+
+			return sb.ToString();
+		}
+
+		#endregion // Serialization
 	}
 }
