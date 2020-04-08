@@ -1,8 +1,9 @@
 using System;
+using System.Text;
 
 namespace DatagenSharp
 {
-	public class RandomNullMutator : IMutator
+	public class RandomNullMutator : IMutator, ISerialization
 	{
 		public static readonly string LongName = "RandomNullMutator";
 
@@ -18,6 +19,11 @@ namespace DatagenSharp
 
 		private double threshold;
 
+		/// <summary>
+		/// Stored seed, needed only for serialization purposes because there is no easy way to get seed back from Random
+		/// </summary>
+		private int storedSeed = 0;
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			bool thresholdParseSuccess = this.ParseThreshold(parameter);
@@ -28,6 +34,7 @@ namespace DatagenSharp
 			}
 
 			this.rng = new Random(seed);
+			this.storedSeed = seed;
 			return (success: true, possibleError: "");
 		}
 
@@ -80,5 +87,22 @@ namespace DatagenSharp
 
 			return false;
 		}
+
+		#region Serialization
+		public (bool success, string possibleError) Load(string parameter)
+		{
+			return (true, "");
+		}
+
+		public string Save()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append($"{CommonSerialization.delimiter}{CommonSerialization.delimiter}{this.storedSeed}");
+
+			return sb.ToString();
+		}
+
+		#endregion // Serialization
 	}
 }
