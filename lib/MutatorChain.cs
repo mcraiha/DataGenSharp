@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DatagenSharp
 {
-	public class MutatorChain : ISerialization
+	public sealed class MutatorChain : ISerialization
 	{
 		private List<(IMutator mutator, object parameters, Type wantedOutput)> chain = new List<(IMutator mutator, object parameters, Type wantedOutput)>();
 

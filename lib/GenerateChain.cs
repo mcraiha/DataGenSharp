@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DatagenSharp
 {
-	public class GenerateChain
+	public sealed class GenerateChain
 	{
 		public List<IDataGenerator> DataGenerators = new List<IDataGenerator>();
 
