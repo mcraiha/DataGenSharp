@@ -19,5 +19,11 @@ namespace DatagenSharp
 		/// </summary>
 		/// <returns>String that contains serialization</returns>
 		string Save();
+
+		/// <summary>
+		/// Get internal ID needed for serialization ordering
+		/// </summary>
+		/// <returns>Long, that has range of 0 .. long.max</returns>
+		long GetInternalId();
 	}
 }

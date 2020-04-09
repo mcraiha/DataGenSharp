@@ -8,6 +8,13 @@ namespace DatagenSharp
 	{
 		private List<(IMutator mutator, object parameters, Type wantedOutput)> chain = new List<(IMutator mutator, object parameters, Type wantedOutput)>();
 
+		private long internalId = 0;
+
+		public MutatorChain()
+		{
+			this.internalId = UniqueIdMaker.GetId();
+		}
+
 		public (bool success, string possibleError) AddMutatorToChain(IMutator mutator, object parameters, Type wantedOutput)
 		{
 			// TODO: check if chain is compatible
@@ -59,6 +66,11 @@ namespace DatagenSharp
 			}
 
 			return sb.ToString();
+		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
 		}
 
 		#endregion // Serialization

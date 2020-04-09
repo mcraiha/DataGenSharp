@@ -27,10 +27,17 @@ namespace DatagenSharp
 		/// </summary>
 		private int storedSeed = 0;
 
+		private long internalId = 0;
+
 		private enum SelectedOutput 
 		{
 			StringWithDotSeparators = 0,
 			Uint
+		}
+
+		public IPv4Generator()
+		{
+			this.internalId = UniqueIdMaker.GetId();
 		}
 
 		public (bool success, string possibleError) Init(object parameter, int seed)
@@ -133,6 +140,11 @@ namespace DatagenSharp
 		public string Save()
 		{
 			return $"{CommonSerialization.delimiter}{CommonSerialization.delimiter}{this.storedSeed}";
+		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
 		}
 	}
 }

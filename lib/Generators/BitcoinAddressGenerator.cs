@@ -24,6 +24,13 @@ namespace DatagenSharp
 		/// </summary>
 		private int storedSeed = 0;
 
+		private long internalId = 0;
+
+		public BitcoinAddressGenerator()
+		{
+			this.internalId = UniqueIdMaker.GetId();
+		}
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			if (parameter == null)
@@ -111,6 +118,11 @@ namespace DatagenSharp
 		public string Save()
 		{
 			return $"{CommonSerialization.delimiter}{CommonSerialization.delimiter}{this.storedSeed}";
+		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
 		}
 
 		private static readonly string validBase58Chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";

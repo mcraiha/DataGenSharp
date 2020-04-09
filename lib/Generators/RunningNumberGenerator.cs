@@ -25,6 +25,13 @@ namespace DatagenSharp
 		private static readonly long stepDefault = 1;
 		private long step = stepDefault;
 
+		private long internalId = 0;
+
+		public RunningNumberGenerator()
+		{
+			this.internalId = UniqueIdMaker.GetId();
+		}
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			if (parameter == null)
@@ -175,5 +182,11 @@ namespace DatagenSharp
 
 			return $"{CommonSerialization.delimiter}{joined}{CommonSerialization.delimiter}0";
 		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
+		}
+
 	}
 }

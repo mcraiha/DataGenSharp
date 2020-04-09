@@ -34,6 +34,13 @@ namespace DatagenSharp
 		/// </summary>
 		private int storedSeed = 0;
 
+		private long internalId = 0;
+
+		public BooleanGenerator()
+		{
+			this.internalId = UniqueIdMaker.GetId();
+		}
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			if (parameter == null)
@@ -146,6 +153,11 @@ namespace DatagenSharp
 			string mode = this.chosenMode == GenerateMode.Random ? randomModeKeywords[0] : alternatingModeKeywords[0];
 			int seed = this.chosenMode == GenerateMode.Random ? this.storedSeed : 0;
 			return $"{CommonSerialization.delimiter}{mode}{CommonSerialization.delimiter}{seed}";
+		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
 		}
 	}
 }

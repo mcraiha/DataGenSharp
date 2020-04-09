@@ -55,6 +55,13 @@ namespace DatagenSharp
 		/// </summary>
 		private int storedSeed = 0;
 
+		private long internalId = 0;
+
+		public IntegerGenerator()
+		{
+			this.internalId = UniqueIdMaker.GetId();
+		}
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			if (parameter == null)
@@ -297,6 +304,11 @@ namespace DatagenSharp
 				}
 			}
 			return $"{CommonSerialization.delimiter}{joined}{CommonSerialization.delimiter}{this.storedSeed}";
+		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
 		}
 	}
 }

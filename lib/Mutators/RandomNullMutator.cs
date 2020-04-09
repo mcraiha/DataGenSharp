@@ -24,6 +24,13 @@ namespace DatagenSharp
 		/// </summary>
 		private int storedSeed = 0;
 
+		private long internalId = 0;
+
+		public RandomNullMutator()
+		{
+			this.internalId = UniqueIdMaker.GetId();
+		}
+
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			bool thresholdParseSuccess = this.ParseThreshold(parameter);
@@ -101,6 +108,11 @@ namespace DatagenSharp
 			sb.Append($"{CommonSerialization.delimiter}{CommonSerialization.delimiter}{this.storedSeed}");
 
 			return sb.ToString();
+		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
 		}
 
 		#endregion // Serialization
