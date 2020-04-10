@@ -8,7 +8,7 @@ namespace DatagenSharp
 	/// <summary>
 	/// Class for outputting Json data
 	/// </summary>
-	public class JsonOutput : IDataOutputter
+	public class JsonOutput : IDataOutputter, ISerialization
 	{
 		public static readonly string LongName = "JsonOutput";
 
@@ -33,6 +33,13 @@ namespace DatagenSharp
 		private StreamWriter output;
 
 		private List<object> jsonAttributes = null;
+
+		private long internalId = 0;
+
+		public JsonOutput()
+		{
+			this.internalId = UniqueIdMaker.GetId();
+		}
 
 		public (bool success, string possibleError) Init(object parameter, Stream outputStream)
 		{
@@ -124,5 +131,27 @@ namespace DatagenSharp
 		{
 			return (LongName, ShortName);
 		}
+
+		#region Serialization
+		public (bool success, string possibleError) Load(string parameter)
+		{
+			return (true, "");
+		}
+
+		public string Save()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append($"{CommonSerialization.delimiter}NULL");
+
+			return sb.ToString();
+		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
+		}
+
+		#endregion // Serialization
 	}
 }
