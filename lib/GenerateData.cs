@@ -73,6 +73,26 @@ namespace DatagenSharp
 			this.chain.DataGenerators.AddRange(generators);
 		}
 
+		public void AddMutatorToNewChain(IMutator mutator, object parameters, Type wantedOutput)
+		{
+			MutatorChain mutatorChain = new MutatorChain();
+			mutatorChain.AddMutatorToChain(mutator, parameters, wantedOutput);
+			this.chain.MutatorChains.Add(mutatorChain);
+		}
+
+		public (bool success, string possibleError) AddMutatorToExistingChain(long internalChainId, IMutator mutator, object parameters, Type wantedOutput)
+		{
+			MutatorChain existingChain = this.chain.MutatorChains.Find((MutatorChain mc) => mc.GetInternalId() == internalChainId);
+			if (existingChain == null)
+			{
+				return (false, $"Cannot find existing chain with internal ID: {internalChainId}");
+			}
+
+			existingChain.AddMutatorToChain(mutator, parameters, wantedOutput);
+
+			return (true, "");
+		}
+
 		/// <summary>
 		/// Add wanted element
 		/// </summary>
@@ -113,7 +133,9 @@ namespace DatagenSharp
 			StringBuilder sb = new StringBuilder();
 
 			sb.AppendLine(CommonSerialization.header);
-			sb.AppendLine(this.chain.Save());
+			sb.Append(this.chain.Save());
+			sb.AppendLine(CommonSerialization.outputter);
+			sb.AppendLine($"{this.output.GetNames().shortName}{((ISerialization)this.output).Save()}");
 
 			return sb.ToString();
 		}

@@ -16,6 +16,8 @@ namespace DatagenSharp
 
 		public static readonly string wantedElements = "WANTED ELEMENTS:";
 
+		public static readonly string outputter = "OUTPUTTER:";
+
 		/// <summary>
 		/// Each object definition line should start with this character
 		/// </summary>
@@ -25,6 +27,8 @@ namespace DatagenSharp
 		/// Delimiter for values of single object
 		/// </summary>
 		public static readonly char delimiter = '~';
+
+		public static readonly char missingElementChar = '_';
 
 		public static readonly char commentStartChar = '#';
 

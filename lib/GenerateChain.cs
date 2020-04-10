@@ -84,10 +84,68 @@ namespace DatagenSharp
 			sb.AppendLine(CommonSerialization.wantedElements);
 			foreach ((string name, IDataGenerator generator, object parameter, Type wantedOutput, MutatorChain mutatorChain) in this.WantedElements)
 			{
-				sb.AppendLine($"{CommonSerialization.itemStartChar}{name}{CommonSerialization.delimiter}{1}");
+				int generatorId = 0;
+				if (generator is ISerialization generatorSerialization)
+				{
+					generatorId = this.FindIndexOfGenerator(generatorSerialization.GetInternalId()) + 1;
+				}
+
+				// If generator cannot be found, skip wanted output
+				if (generatorId < 1)
+				{
+					continue;
+				}
+
+				int chainId = 0;
+				if (mutatorChain != null && mutatorChain is ISerialization mutatorSerialization)
+				{
+					chainId = this.FindIndexOfMutatorChain(mutatorSerialization.GetInternalId()) + 1;
+				}
+
+				string mutatorChainId = (chainId > 0) ? chainId.ToString() : CommonSerialization.missingElementChar.ToString();
+
+				sb.AppendLine($"{CommonSerialization.itemStartChar}{name}{CommonSerialization.delimiter}{generatorId}{CommonSerialization.delimiter}{mutatorChainId}");
 			}
 
 			return sb.ToString();
+		}
+
+		private int FindIndexOfGenerator(long internalChainId)
+		{
+			int zeroBasedIndex = -1;
+
+			for (int i = 0; i < this.DataGenerators.Count; i++)
+			{
+				if (this.DataGenerators[i] is ISerialization serialization)
+				{
+					if (serialization.GetInternalId() == internalChainId)
+					{
+						zeroBasedIndex = i;
+						break;
+					}
+				}
+			}
+			
+			return zeroBasedIndex;
+		}
+
+		private int FindIndexOfMutatorChain(long internalChainId)
+		{
+			int zeroBasedIndex = -1;
+
+			for (int i = 0; i < this.MutatorChains.Count; i++)
+			{
+				if (this.MutatorChains[i] is ISerialization serialization)
+				{
+					if (serialization.GetInternalId() == internalChainId)
+					{
+						zeroBasedIndex = i;
+						break;
+					}
+				}
+			}
+			
+			return zeroBasedIndex;
 		}
 
 		#endregion // Serialization
