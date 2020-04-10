@@ -9,7 +9,7 @@ namespace DatagenSharp
 	/// <summary>
 	/// Class for creating value separated data, e.g. comma-separated values (CSV) or tab-separated values (TSV)
 	/// </summary>
-	public class SomeSeparatedValueOutput : IDataOutputter
+	public class SomeSeparatedValueOutput : IDataOutputter, ISerialization
 	{
 		public static readonly string LongName = "SomeSeparatedValueOutput";
 
@@ -60,6 +60,15 @@ namespace DatagenSharp
 		/// By default we don't want to write BOM https://en.wikipedia.org/wiki/Byte_order_mark
 		/// </summary>
 		private bool writeBom = false;
+
+		private object storedParameter = null; 
+
+		private long internalId = 0;
+
+		public SomeSeparatedValueOutput()
+		{
+			this.internalId = UniqueIdMaker.GetId();
+		}
 
 		public (bool success, string possibleError) Init(object parameter, Stream outputStream)
 		{
@@ -117,7 +126,9 @@ namespace DatagenSharp
 			else
 			{
 				this.output = new StreamWriter(outputStream, new UTF8Encoding(false));
-			}	
+			}
+
+			this.storedParameter = parameter;
 
 			return (success: true, possibleError: "");
 		}
@@ -183,5 +194,27 @@ namespace DatagenSharp
 		{
 			return (LongName, ShortName);
 		}
+
+		#region Serialization
+		public (bool success, string possibleError) Load(string parameter)
+		{
+			return (true, "");
+		}
+
+		public string Save()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append($"{CommonSerialization.delimiter}{this.storedParameter}");
+
+			return sb.ToString();
+		}
+
+		public long GetInternalId()
+		{
+			return this.internalId;
+		}
+
+		#endregion // Serialization
 	}
 }
