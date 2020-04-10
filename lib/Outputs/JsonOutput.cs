@@ -11,6 +11,8 @@ namespace DatagenSharp
 	public class JsonOutput : IDataOutputter
 	{
 		public static readonly string LongName = "JsonOutput";
+
+		public static readonly string ShortName = "JSON";
 		
 		public static readonly string Description = "Use this output if you want JSON";
 
@@ -116,6 +118,11 @@ namespace DatagenSharp
 			this.output.Close();
 
 			return (success: true, possibleError: "");
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 	}
 }

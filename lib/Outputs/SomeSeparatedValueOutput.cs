@@ -12,6 +12,8 @@ namespace DatagenSharp
 	public class SomeSeparatedValueOutput : IDataOutputter
 	{
 		public static readonly string LongName = "SomeSeparatedValueOutput";
+
+		public static readonly string ShortName = "XSV";
 		
 		public static readonly string Description = "Use this output if you want text where entries are separated by chars. e.g. comma-separated values (CSV) or tab-separated values (TSV)";
 
@@ -175,6 +177,11 @@ namespace DatagenSharp
 			this.output.Close();
 
 			return (success: true, possibleError: "");
+		}
+
+		public (string longName, string shortName) GetNames()
+		{
+			return (LongName, ShortName);
 		}
 	}
 }
