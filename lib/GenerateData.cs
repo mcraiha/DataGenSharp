@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace DatagenSharp
 {
@@ -106,6 +107,12 @@ namespace DatagenSharp
 			this.chain.WantedElements.Add(wantedElement);
 		}
 
+		private void AddWantedElement(string name, int zeroBasedGeneratorIndex, int zeroBasedMutatorChainIndex)
+		{
+			// Since mutator chains are not mandatory, check it
+			this.AddWantedElement(name, this.chain.DataGenerators[zeroBasedGeneratorIndex], null, null, zeroBasedMutatorChainIndex > -1 ? this.chain.MutatorChains[zeroBasedMutatorChainIndex] : null);
+		}
+
 		/// <summary>
 		/// Add wanted element
 		/// </summary>
@@ -123,9 +130,156 @@ namespace DatagenSharp
 
 
 		#region Serialization
-		public void Load(string parameter)
-		{
 
+		private enum ReadMode
+		{
+			SeekingSection = 0,
+			ReadGenerators,
+			ReadMutatorChains,
+			ReadWantedElements,
+			ReadOutputter,
+		}
+
+		private ReadMode readMode = ReadMode.SeekingSection;
+
+		public (bool success, string possibleError) Load(string input)
+		{
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			Type[] typesInAssembly = assembly.GetTypes();
+
+			Dictionary<string, Type> typesOfIDataGenerator = new Dictionary<string, Type>();
+			IEnumerable<Type> implementIDataGenerator = typesInAssembly.Where(t => t.GetInterfaces().Contains(typeof(IDataGenerator)));
+
+			Dictionary<string, Type> typesOfIDataOutputter = new Dictionary<string, Type>();
+			IEnumerable<Type> implementIDataOutputter = typesInAssembly.Where(t => t.GetInterfaces().Contains(typeof(IDataOutputter)));
+
+			//IEnumerable<Type> implementISerialization = typesInAssembly.Where(t => t.GetInterfaces().Contains(typeof(ISerialization)));
+			HashSet<Type> implementISerialization = new HashSet<Type>(typesInAssembly.Where(t => t.GetInterfaces().Contains(typeof(ISerialization))));
+
+			foreach (Type type in implementIDataGenerator)
+			{
+				// We only want to keep track of types that implement both IDataGenerator and ISerialization
+				if (implementISerialization.Contains(type))
+				{
+					var tempObj = Activator.CreateInstance(type) as IDataGenerator;
+					typesOfIDataGenerator[tempObj.GetNames().shortName] = type;
+				}
+			}
+
+			foreach (Type type in implementIDataOutputter)
+			{
+				// We only want to keep track of types that implement both IDataOutputter and ISerialization
+				if (implementISerialization.Contains(type))
+				{
+					var tempObj = Activator.CreateInstance(type) as IDataOutputter;
+					typesOfIDataOutputter[tempObj.GetNames().shortName] = type;
+				}
+			}
+
+			this.readMode = ReadMode.SeekingSection;
+			using (StringReader reader = new StringReader(input))
+			{
+				string line = reader.ReadLine();
+				while (line != null)
+				{
+					if (line.StartsWith(CommonSerialization.generators))
+					{
+						this.readMode = ReadMode.ReadGenerators;
+					}
+					else if (line.StartsWith(CommonSerialization.mutatorChains))
+					{
+						this.readMode = ReadMode.ReadMutatorChains;
+					}
+					else if (line.StartsWith(CommonSerialization.wantedElements))
+					{
+						this.readMode = ReadMode.ReadWantedElements;
+					}
+					else if (line.StartsWith(CommonSerialization.outputter))
+					{
+						this.readMode = ReadMode.ReadOutputter;
+					}
+					else
+					{
+						if (readMode == ReadMode.ReadGenerators)
+						{
+							int indexOfFirstSpace = line.IndexOf(' ');
+							string indexNumber = line.Substring(0, indexOfFirstSpace);
+							string generator = line.Substring(indexOfFirstSpace + 1);
+
+							if (!int.TryParse(indexNumber, out int generatorIndex))
+							{
+								return (false, $"Line: {line} has invalid generator index value");
+							}
+
+							string[] generatorSplitted = generator.Split(CommonSerialization.delimiter);
+							if (!typesOfIDataGenerator.ContainsKey(generatorSplitted[0]))
+							{
+								return (false, $"Line: {line} has unknown generator shortname {generatorSplitted[0]}");
+							}
+
+							if (!int.TryParse(generatorSplitted[2], out int rngSeed))
+							{
+								return (false, $"Line: {line} has invalid rng seed {generatorSplitted[2]}");
+							}
+
+							var generatorToAdd = Activator.CreateInstance(typesOfIDataGenerator[generatorSplitted[0]]) as IDataGenerator;
+							//bool shouldParameterBeNull = (string.IsNullOrEmpty(generatorSplitted[1]) || generatorSplitted[1] == CommonSerialization.nullValue);
+							(bool generatorLoadSuccess, string generatorLoadError) = ((ISerialization)generatorToAdd).Load($"{CommonSerialization.delimiter}{generatorSplitted[1]}{CommonSerialization.delimiter}{generatorSplitted[2]}");
+							
+							if (!generatorLoadSuccess)
+							{
+								return (generatorLoadSuccess, generatorLoadError);
+							}
+
+							this.AddGeneratorToChain(generatorToAdd);
+						}
+						else if (readMode == ReadMode.ReadMutatorChains)
+						{
+
+						}
+						else if (readMode == ReadMode.ReadWantedElements)
+						{
+							if (!line.StartsWith("-"))
+							{
+								return (false, $"Line: {line} does not start with -");
+							}
+
+							string[] wantedElementsSplitted = line.Split(CommonSerialization.delimiter);
+
+							string name = wantedElementsSplitted[0].Substring(1);
+
+							if (!int.TryParse(wantedElementsSplitted[1], out int generatorIndex))
+							{
+								return (false, $"Line: {line} has invalid generator index value");
+							}
+
+							int mutatorChainIndex = -1;
+
+							if (wantedElementsSplitted[2].StartsWith(CommonSerialization.missingElementChar.ToString()))
+							{
+
+							}
+							else if (!int.TryParse(wantedElementsSplitted[2], out mutatorChainIndex))
+							{
+								return (false, $"Line: {line} has invalid mutator chain index value");
+							}
+
+							this.AddWantedElement(name, generatorIndex - 1, mutatorChainIndex - 1);
+						}
+						else if (readMode == ReadMode.ReadOutputter)
+						{
+							string[] outputterSplitted = line.Split(CommonSerialization.delimiter);
+							var outputterToAdd = Activator.CreateInstance(typesOfIDataOutputter[outputterSplitted[0]]) as IDataOutputter;
+							this.output = outputterToAdd;
+						}
+					}
+
+
+					line = reader.ReadLine();
+				}
+			}
+
+			return (true, "");
 		}
 
 		public string Save()
