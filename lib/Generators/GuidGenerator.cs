@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DatagenSharp
 {
-	public class GuidGenerator : IDataGenerator
+	public sealed class GuidGenerator : IDataGenerator
 	{
 		public static readonly string LongName = "GuidGenerator";
 

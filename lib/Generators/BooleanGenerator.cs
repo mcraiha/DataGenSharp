@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DatagenSharp
 {
-	public class BooleanGenerator : IDataGenerator, ISerialization
+	public sealed class BooleanGenerator : IDataGenerator, ISerialization
 	{
 		public static readonly string LongName = "BooleanGenerator";
 		public static readonly string ShortName = "BOOL";
