@@ -11,7 +11,7 @@ namespace DatagenSharp
 
 		public List<MutatorChain> MutatorChains = new List<MutatorChain>();
 
-		public List<(string name, IDataGenerator generator, object parameter, Type wantedOutput, MutatorChain mutatorChain)> WantedElements = new List<(string, IDataGenerator,  object, Type, MutatorChain)>();
+		public List<(string name, IDataGenerator generator, object stepParameter, Type wantedOutput, MutatorChain mutatorChain)> WantedElements = new List<(string, IDataGenerator,  object, Type, MutatorChain)>();
 
 		public List<string> GetNames()
 		{
@@ -25,7 +25,7 @@ namespace DatagenSharp
 			for (int i = 0; i < this.WantedElements.Count; i++)
 			{
 				var item = this.WantedElements[i];
-				(bool generateSuccess, string possibleError, object tempValue) = item.generator.Generate(item.parameter, item.wantedOutput);
+				(bool generateSuccess, string possibleError, object tempValue) = item.generator.Generate(item.stepParameter, item.wantedOutput);
 				
 				if (item.mutatorChain != null)
 				{
