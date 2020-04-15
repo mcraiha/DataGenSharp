@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace DatagenSharp
 {
-	public class EmailMutator : IMutator
+	public sealed class EmailMutator : IMutator
 	{
 		private static readonly List<string> emailDomains = new List<string>()
 		{

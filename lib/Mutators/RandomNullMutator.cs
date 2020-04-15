@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DatagenSharp
 {
-	public class RandomNullMutator : IMutator, ISerialization
+	public sealed class RandomNullMutator : IMutator, ISerialization
 	{
 		public static readonly string LongName = "RandomNullMutator";
 

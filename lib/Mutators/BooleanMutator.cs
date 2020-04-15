@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DatagenSharp
 {
-	public class BooleanMutator : IMutator
+	public sealed class BooleanMutator : IMutator
 	{
 		private static readonly char defaultValueSeparator = ',';
 
