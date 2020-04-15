@@ -24,6 +24,9 @@ namespace Tests
 			// Assert
 			Assert.IsTrue(success);
 			Assert.IsTrue(string.IsNullOrEmpty(possibleError));
+			Assert.AreEqual(1, generateData.chain.DataGenerators.Count);
+			Assert.AreEqual(1, generateData.chain.WantedElements.Count);
+			Assert.IsNotNull(generateData.output);
 		}
 	}
 }
