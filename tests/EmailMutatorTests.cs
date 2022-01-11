@@ -28,7 +28,7 @@ namespace Tests
 			Assert.IsTrue(string.IsNullOrEmpty(initResult1.possibleError));
 		}
 
-		[Test]
+		[Test, Description("Normal domains in email addresses")]
 		public void ValidMutateTest()
 		{
 			// Arrange
@@ -39,6 +39,38 @@ namespace Tests
 
 			string[] inputArray = new string[] { "John Smith", "Pele", "Mick Han Jackson"};
 			string[] expectedResults = new string[] {"John.Smith@hotmail.com", "Pele@yahoo.com", "Mick.Han.Jackson@msn.com"};
+
+			List<bool> successArray = new List<bool>();
+			List<string> resultArray = new List<string>();
+
+			// Act
+			foreach (string str in inputArray)
+			{
+				(bool success, string possibleError, object result) = valid1.Mutate(str);
+				successArray.Add(success);
+				resultArray.Add((string)result);
+			}
+
+			// Assert
+			CollectionAssert.AllItemsAreUnique(inputArray, "Make sure all inputs are unique");
+
+			Assert.AreEqual(successArray.Count, successArray.Where(c => c).Count(), "Every run should be success");
+
+			CollectionAssert.AreNotEqual(inputArray, resultArray, "Make sure Mutator modified the inputs");
+			CollectionAssert.AreEqual(expectedResults, resultArray, "See that everything went as expected");
+		}
+
+		[Test, Description("Example domains in email addresses")]
+		public void ValidExampleMutateTest()
+		{
+			// Arrange
+			int seed = 1337;
+			EmailMutator valid1 = new EmailMutator();
+			string examples = "EXAMPLES";
+			var initResult1 = valid1.Init(examples, seed);
+
+			string[] inputArray = new string[] { "John Smith", "Pele", "Mick Han Jackson"};
+			string[] expectedResults = new string[] {"John.Smith@example.com", "Pele@example.com", "Mick.Han.Jackson@example.com"};
 
 			List<bool> successArray = new List<bool>();
 			List<string> resultArray = new List<string>();
