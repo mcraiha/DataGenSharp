@@ -121,9 +121,9 @@ namespace DatagenSharp
 		/// <param name="stepParameter">Optional parameter for the generate step</param>
 		/// <param name="wantedOutput">Output type wanted to generate</param>
 		/// <param name="mutatorChain">Optional mutator chain that will mutate the output</param>
-		public void AddWantedElement(string name, IDataGenerator generator, object parameter, Type wantedOutput, MutatorChain mutatorChain)
+		public void AddWantedElement(string name, IDataGenerator generator, object stepParameter, Type wantedOutput, MutatorChain mutatorChain)
 		{
-			this.AddWantedElement((name, generator, parameter, wantedOutput, mutatorChain));
+			this.AddWantedElement((name, generator, stepParameter, wantedOutput, mutatorChain));
 		}
 
 		#endregion // Helpers
