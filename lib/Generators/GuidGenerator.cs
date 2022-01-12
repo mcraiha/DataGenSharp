@@ -10,7 +10,7 @@ namespace DatagenSharp
 
 		public static readonly string ShortName = "GUID";
 		
-		public static readonly string Description = "Generate GUID values (e.g. 123e4567-e89b-12d3-a456-426655440000)";
+		public static readonly string Description = "Generate GUID (globally unique identifier) values (e.g. 123e4567-e89b-12d3-a456-426655440000)";
 
 		public static readonly string VersionNumber = "0.9";
 
