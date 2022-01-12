@@ -16,15 +16,37 @@ namespace DatagenSharp
 
 		private static readonly Type[] supportedOutputTypes = new Type[] { typeof(string) };
 
-		private static readonly char groupSeparator = '-';
+		private static readonly List<string> noGroupingKeywords = new List<string>() { "nogroups", "joined" };
+
+		public static readonly char groupSeparator = '-';
 
 		private Random rng = null;
+
+		/// <summary>
+		/// Add group separators, (when enabled output is like 6800f4c7-435e-02aa-c27c-4fd927fc2227, and when disabled the output is like )
+		/// </summary>
+		private bool addGroupSeparators = true;
 
 		private byte[] currentValue = new byte[16];
 
 		public (bool success, string possibleError) Init(object parameter, int seed)
 		{
 			this.rng = new Random(seed);
+
+			if (parameter == null)
+			{
+
+			}
+			else if (parameter.GetType() == typeof(string))
+			{
+				string parameterAsString = (string)parameter;
+				parameterAsString = parameterAsString.ToLower();
+
+				if (noGroupingKeywords.Contains(parameterAsString))
+				{
+					this.addGroupSeparators = false;
+				}
+			}
 
 			// Generate first value
 			this.NextStep();
@@ -47,12 +69,12 @@ namespace DatagenSharp
 				return (success: false, possibleError: ErrorMessages.UnsupportedWantedOutputType(LongName, wantedOutput), result: null);
 			}
 
-			object returnValue = FormatGuid(this.currentValue);
+			object returnValue = FormatGuid(this.currentValue, this.addGroupSeparators);
 
 			return (success: true, possibleError: "", result: returnValue);
 		}
 
-		private static string FormatGuid(byte[] bytes)
+		private static string FormatGuid(byte[] bytes, bool useGrouping)
 		{
 			StringBuilder hex = new StringBuilder(bytes.Length * 2);
 
@@ -61,7 +83,7 @@ namespace DatagenSharp
 			{
 				hex.AppendFormat("{0:x2}", b);
 				index++;
-				if (index == 4 || index == 6 || index == 8 || index == 10)
+				if (useGrouping && (index == 4 || index == 6 || index == 8 || index == 10))
 				{
 					hex.Append(groupSeparator);
 				}

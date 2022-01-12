@@ -65,6 +65,53 @@ namespace Tests
 			
 			CollectionAssert.DoesNotContain(successList, false, "All generates should have been successful");
 			CollectionAssert.AllItemsAreUnique(guids, "In theory every GUID should be unique");
+
+			foreach (string guid in guids)
+			{
+				Assert.AreEqual(4, guid.Count(c => c== GuidGenerator.groupSeparator), "Every regular GUID should have 4 group separators");
+			}
+		}
+
+		[Test, Description("Test that no grouping option works")]
+		public void GenerateNoGroupingTest()
+		{
+			// Arrange
+			string parameter = "JOINED"; // Disables grouping
+
+			int seed = 1337;
+
+			int loopCount = 100;
+
+			GuidGenerator gg = new GuidGenerator();
+
+			List<string> guids = new List<string>();
+			List<bool> successList = new List<bool>();
+
+			// Act
+			var shouldBeValidResult = gg.Init(parameter, seed);
+			var generated1 = gg.Generate(parameter);
+			var generated2 = gg.Generate(parameter); // Same step should provide same result
+			
+			for (int i = 0; i < loopCount; i++)
+			{
+				gg.NextStep();
+				var generateResult = gg.Generate(parameter: null, wantedOutput: null);
+				successList.Add(generateResult.success);
+				guids.Add((string)generateResult.result);
+			}
+
+			// Assert
+			Assert.IsTrue(shouldBeValidResult.success, "Init should have been successful");
+
+			Assert.AreEqual(generated1.result, generated2.result, "Both generates should have same results since NextStep has not been called between them");
+			
+			CollectionAssert.DoesNotContain(successList, false, "All generates should have been successful");
+			CollectionAssert.AllItemsAreUnique(guids, "In theory every GUID should be unique");
+
+			foreach (string guid in guids)
+			{
+				Assert.AreEqual(0, guid.Count(c => c== GuidGenerator.groupSeparator), "Every GUID should have 0 group separators");
+			}
 		}
 
 		[Test]
