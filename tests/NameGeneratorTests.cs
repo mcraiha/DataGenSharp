@@ -39,6 +39,29 @@ namespace Tests
 			Assert.IsFalse(shouldBeInvalidResult1.success);
 		}
 
+		[Test, Description("Check that different languages provide different output")]
+		public void CheckLanguageDifferencesTest()
+		{
+			// Arrange
+			object valid1 = null; // Should default to English
+			string valid2 = "language=finnish";
+
+			int seed = 1337;
+
+			NameGenerator ng1 = new NameGenerator();
+			NameGenerator ng2 = new NameGenerator();
+
+			// Act
+			var shouldBeValidResult1 = ng1.Init(valid1, seed);
+			var shouldBeValidResult2 = ng2.Init(valid2, seed);
+
+			var generated1 = ng1.Generate();
+			var generated2 = ng2.Generate();
+
+			// Assert
+			Assert.AreNotEqual((string)generated1.result, (string)generated2.result);
+		}
+
 		[Test]
 		public void ContinuosGenerateTest()
 		{
