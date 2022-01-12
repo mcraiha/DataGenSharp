@@ -19,10 +19,10 @@ namespace DatagenSharp
 
 		public static readonly string VersionNumber = "0.9.1";
 
-		private static readonly List<(string presetName, string separator, string[] dangerousEntries)> predefinedPresets = new List<(string, string, string[])>()
+		private static readonly List<(string presetName, string separator, string[] dangerousEntries, Func<string, string> makeSafe)> predefinedPresets = new List<(string, string, string[], Func<string, string>)>()
 		{
-			("csv", 	",", 	new[] {",", "\"", "\r", "\n"}),
-			("tsv", 	"\t", 	new[] {"\t", "\r", "\n"}),
+			("csv", 	",", 	new[] {",", "\"", "\r", "\n"}, MakeStringCSVSafe),
+			("tsv", 	"\t", 	new[] {"\t", "\r", "\n"}, null),
 		};
 
 		private static readonly List<Type> supportedParameterTypes = new List<Type>()
@@ -39,7 +39,7 @@ namespace DatagenSharp
 		/// <summary>
 		/// Chosen preset
 		/// </summary>
-		private (string presetName, string separator, string[] dangerousEntries) preset;
+		private (string presetName, string separator, string[] dangerousEntries, Func<string, string> makeSafe) preset;
 
 		/// <summary>
 		/// Output for writing data
@@ -150,6 +150,11 @@ namespace DatagenSharp
 				}
 
 				string writeThis = entry.ToString();
+				// Make text safe if needed
+				if (preset.dangerousEntries.Any(writeThis.Contains))
+				{
+					writeThis = preset.makeSafe(writeThis);
+				}
 				this.output.Write(writeThis);
 
 				firstEntry = false;
@@ -172,6 +177,11 @@ namespace DatagenSharp
 				}
 
 				string writeThis = entry.ToString();
+				// Make text safe if needed
+				if (preset.dangerousEntries.Any(writeThis.Contains))
+				{
+					writeThis = preset.makeSafe(writeThis);
+				}
 				this.output.Write(writeThis);
 
 				firstEntry = false;
@@ -193,6 +203,11 @@ namespace DatagenSharp
 		public (string longName, string shortName) GetNames()
 		{
 			return (LongName, ShortName);
+		}
+
+		private static string MakeStringCSVSafe(string input)
+		{
+			return '"' + input + '"';
 		}
 
 		#region Serialization
