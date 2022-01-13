@@ -80,11 +80,11 @@ namespace Tests
 			lig.NextStep(); // Step increase should alter the result for next generate
 			var generated3 = lig.Generate();
 
-            for (int i = 0; i < 150; i++)
-            {
-                lig.NextStep();
-                lig.Generate();
-            }
+			for (int i = 0; i < 150; i++)
+			{
+				lig.NextStep();
+				lig.Generate();
+			}
 
 			// Assert
 			Assert.IsTrue(shouldBeValidResult.success);
