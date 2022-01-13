@@ -13,7 +13,7 @@ namespace Tests
 		{
 		}
 
-		[Test]
+		[Test, Description("Check that Init method works")]
 		public void InitTest()
 		{
 			// Arrange
