@@ -69,7 +69,7 @@ namespace DatagenSharp
 
 		public (bool success, string possibleError, object result) Generate(object parameter = null, Type wantedOutput = null)
 		{
-			string chosenWord = words[this.wordIndex];;
+			string chosenWord = words[this.wordIndex];
 			return (success: true, possibleError: "", result: chosenWord);
 		}
 
