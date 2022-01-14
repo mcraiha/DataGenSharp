@@ -6,10 +6,11 @@
     <VersionPrefix>0.9.1</VersionPrefix>
     <VersionSuffix>$(VersionSuffix)</VersionSuffix>
     <Authors>Kaarlo Räihä</Authors>
-    <Description>C# library for generating data, e.g. JSON and CSV/TSV files</Description>
+    <Description>Managed C# library for generating data, e.g. JSON and CSV/TSV files</Description>
     <IncludeSource>true</IncludeSource>
     <PackageProjectUrl>https://github.com/mcraiha/DataGenSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mcraiha/DataGenSharp.git</RepositoryUrl>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
