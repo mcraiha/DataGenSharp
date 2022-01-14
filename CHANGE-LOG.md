@@ -9,6 +9,8 @@
 - Add Guid generator
 - Add Integer generator
 - Add IPv4 generator
+- Add Lorem Ipsum generator
+- Add file name generator
  
 ## Version 0.9.0
 - Initial Nuget release
