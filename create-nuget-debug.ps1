@@ -16,5 +16,5 @@ if (Get-Command $gitCmdName -errorAction SilentlyContinue)
 }
 
 Write-Host $latestGitCommitHashFull $latestGitCommitHashShort
-$finalCommand = "dotnet pack" + " " + "--configuration Debug" + " " + "--include-source" + " " + "--include-symbols" + " " + "/p:InformationalVersion=""" + $currentDate.ToUniversalTime().ToString("yyyy-MM-dd HH.mm.ss") + " " + $latestGitCommitHashFull + """" + " " + "--version-suffix" + " git-" + $latestGitCommitHashShort
+$finalCommand = "dotnet pack" + " " + "--configuration Debug" + " " + "--include-source" + " " + "--include-symbols" + " " + "/p:InformationalVersion=""" + $currentDate.ToUniversalTime().ToString("yyyy-MM-dd HH.mm.ss") + " " + $latestGitCommitHashFull + """" + " " + "--version-suffix " +  $currentDate.ToUniversalTime().ToString("yyyy-MM-dd") + "-git-" + $latestGitCommitHashShort
 Write-Host $finalCommand
