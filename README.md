@@ -11,7 +11,7 @@ Current [nuget release](https://www.nuget.org/packages/LibDataGenSharp/) is 0.9.
 
 ## How to use
 1. Build .dll or include [lib folder](lib) in your project
-2. Use code like
+2. Use code like (you can test this example in [DotnetFiddle](https://dotnetfiddle.net/Gz6aBG) )
 ```csharp
 // Arrange
 GenerateData generateData = new GenerateData();
