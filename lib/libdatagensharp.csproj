@@ -10,6 +10,8 @@
     <IncludeSource>true</IncludeSource>
     <PackageProjectUrl>https://github.com/mcraiha/DataGenSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mcraiha/DataGenSharp.git</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
   </PropertyGroup>
 
