@@ -120,7 +120,6 @@ dotnet test
 * Bitcoin address generator
 
 ## What is work in progress
-* Nuget
 * More generators
 * More mutators
 * More test cases
