@@ -3,6 +3,7 @@ using DatagenSharp;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Tests
 {
@@ -32,6 +33,8 @@ namespace Tests
 
 			string result = Encoding.UTF8.GetString(ms.ToArray());
 
+			var deserialized = JsonDocument.Parse(result);
+
 			// Assert
 			Assert.IsTrue(initResult.success, "Init should be successful");
 			Assert.IsTrue(writeHeaderResult.success, "Header write should be successful");
@@ -45,6 +48,9 @@ namespace Tests
 
 			Assert.IsTrue(result.Contains(singleLineEntries[0].ToString()), "Final output should contain 1");
 			Assert.IsTrue(result.Contains((string)singleLineEntries[1]), "Final output should contain 'text is nice'");
+
+			Assert.AreEqual(deserialized.RootElement[0].GetProperty("myInt").GetInt32(), simpleTuple.myInt);
+			Assert.AreEqual(deserialized.RootElement[0].GetProperty("myString").GetString(), simpleTuple.myString); 
 		}
 	}
 }
