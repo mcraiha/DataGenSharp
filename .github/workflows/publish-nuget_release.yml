@@ -22,7 +22,7 @@ jobs:
       run: echo "CURRENT_TIME=`date -Iseconds`" >> $GITHUB_ENV
     - name: Pack
       run: |
-        cd src
+        cd lib
         dotnet pack -o out --configuration Release --include-source --include-symbols /p:ContinuousIntegrationBuild=true /p:InformationalVersion="Build time: ${{env.CURRENT_TIME}} Short hash: ${{env.SHORT_SHA}}"
     - name: Push to Nuget
-      run: dotnet nuget push ./src/out/*.nupkg --skip-duplicate -k ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ./lib/out/*.nupkg --skip-duplicate -k ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
