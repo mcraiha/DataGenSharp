@@ -86,11 +86,11 @@ namespace DatagenSharp
 				if (!firstEntry)
 				{
 					this.output.Write(JsonOutput.separator);
-					this.output.WriteLine();
+					this.output.Write(" ");
 				}
 				else 
 				{
-					this.output.WriteLine("{");
+					this.output.Write("{");
 					firstEntry = false;
 				}
 
@@ -116,8 +116,6 @@ namespace DatagenSharp
 
 		public (bool success, string possibleError) WriteFooter(List<object> parameter)
 		{
-			this.output.WriteLine();
-
 			// End array
 			this.output.WriteLine("]");
 
